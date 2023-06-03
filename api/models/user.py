@@ -3,10 +3,10 @@ from datetime import datetime
 from uuid import uuid4
 
 class User(db.Model):
-    __tablename__ = 'users'
+    # __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.String(36), nullable=False, unique=True)
+    uuid = db.Column(db.String(16), nullable=False, unique=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
@@ -15,11 +15,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    # def __init__(self, username, password):
-    #     # self.id = str(uuid4())
-    #     # self.uuid = str(uuid4())
-    #     self.username = username
-    #     self.password = password
+    urls = db.relationship('Url', backref='user', lazy=True)
 
     def __repr__(self):
         return f'<User {self.email}>'
