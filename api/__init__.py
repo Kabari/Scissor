@@ -7,7 +7,11 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_mail import Mail
 from .auth.views import auth_ns
+from .shorten.views import url_ns
 from .models.user import User
+from .models.url import Url
+from .models.click import Click
+from flask_caching import Cache
 
 
 def create_app(config=config_dict['dev']):
@@ -16,6 +20,9 @@ def create_app(config=config_dict['dev']):
     app.config.from_object(config)
 
     db.init_app(app)
+
+    cache = Cache(app)
+    # Cache.init_app(app)
 
     CORS(app)
 
@@ -36,18 +43,21 @@ def create_app(config=config_dict['dev']):
 
     api = Api(app, 
         version='1.0', 
-        title='Flask API', 
-        description='A simple Flask API',
+        title='Scissor API', 
+        description='A url shortener Service',
         authorizations=authorizations,
         security='Bearer Auth')
     
     api.add_namespace(auth_ns, path='/auth')
+    api.add_namespace(url_ns, path='/url')
 
     @app.shell_context_processor
     def make_shell_context():
         return {
             'db': db, 
-            'User': User
+            'User': User,
+            'Url': Url,
+            'Click': Click
         }
 
 
