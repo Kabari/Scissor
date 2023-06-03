@@ -2,10 +2,10 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
 from ..models.user import User
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, unset_jwt_cookies
 from ..utils import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from uuid import uuid4
+from uuid import UUID
 from http import HTTPStatus
 # from flask_mail import Message, Mail
 # from datetime import datetime, timedelta
@@ -28,13 +28,18 @@ signup_model = auth_ns.model(
 )
 
 user_model = auth_ns.model(
-    'Signup', {
+    'User', {
         'id': fields.Integer(),
         'uuid': fields.String(max_length=36, description='User unique identifier'),
         'first_name': fields.String(required=True, max_length=50, description='User first name'),
         'last_name': fields.String(required=True, max_length=50, description='User last name'),
         'email': fields.String(required=True, max_length=50, description='User email address'),
-        'password_hash': fields.String(required=True, description='User password')
+        'password_hash': fields.String(required=True, description='User password'),
+        'is_verified': fields.Boolean(),
+        'created_at': fields.DateTime(description='User creation date'),
+        'updated_at': fields.DateTime(description='User data update date'),
+        'urls': fields.List(fields.String(description='No of urls of the user'))
+        
     }
 )
 
@@ -75,28 +80,29 @@ class Signup(Resource):
             return {
                 'message': 'User already exists'
             }, HTTPStatus.BAD_REQUEST
-        
+
         new_user = User(
-            first_name=data.get('first_name'),
-            last_name=data.get('last_name'),
-            email=data.get('email'),
-            password_hash=generate_password_hash(data.get('password')),
+            first_name = data.get('first_name'),
+            last_name = data.get('last_name'),
+            email = data.get('email'),
+            password_hash = generate_password_hash(data.get('password')),
             is_verified=False
         )
 
         new_user.save()
 
+        return new_user, HTTPStatus.CREATED
         # token = generate_verification_token()
         # verification_url = f"http://localhost:5000/api/auth/verify_email/token={token}"
         # send_verification_email(new_user.email, verification_url)
 
-        access_token = create_access_token(identity=new_user.email)
-        refresh_token = create_refresh_token(identity=new_user.email)
+        # access_token = create_access_token(identity=new_user.email)
+        # refresh_token = create_refresh_token(identity=new_user.email)
 
-        token = {
-            'access_token': access_token,
-            'refresh_token': refresh_token
-        }
+        # token = {
+        #     'access_token': access_token,
+        #     'refresh_token': refresh_token
+        # }
 
         # response = {
         #     'uuid': new_user.uuid,
@@ -104,7 +110,6 @@ class Signup(Resource):
         #     'token': token 
         # }
 
-        return new_user, HTTPStatus.CREATED
     
         # """send a verification email to the user's email address"""
         # msg = Message(
@@ -180,26 +185,30 @@ class Login(Resource):
     def post(self):
         data = request.get_json()
 
-        user = User.query.filter_by(email=data['email']).first()
+        email = data.get('email')
+        password = data.get('password')
 
-        if not user:
-            return {
-                'message': 'User does not exist'
-            }, HTTPStatus.NOT_FOUND
+        user = User.query.filter_by(email=email).first()
 
-        if check_password_hash(user.password_hash, data['password']):
-            access_token = create_access_token(identity=user.uuid)
-            refresh_token = create_refresh_token(identity=user.uuid)
+        # if not user:
+        #     return {
+        #         'message': 'User does not exist'
+        #     }, HTTPStatus.NOT_FOUND
 
-            return {
+        if (user is not None) and check_password_hash(user.password_hash, password):
+            access_token = create_access_token(identity=user.email)
+            refresh_token = create_refresh_token(identity=user.email)
+
+            response = {
                 'message': 'Logged in as {}'.format(user.email),
                 'access_token': access_token,
                 'refresh_token': refresh_token
-            }, HTTPStatus.OK
-        else:
-            return {
-                'message': 'Wrong credentials'
-            }, HTTPStatus.UNAUTHORIZED
+            }
+            return response, HTTPStatus.OK
+        # else:
+        #     return {
+        #         'message': 'Wrong credentials'
+        #     }, HTTPStatus.UNAUTHORIZED
         
 
 @auth_ns.route('/refresh')
@@ -215,3 +224,14 @@ class Refresh(Resource):
             'access_token': access_token
         }, HTTPStatus.OK
     
+
+@auth_ns.route('/logout')
+class Logout(Resource):
+    @jwt_required()
+    def post(self):
+        """
+        Log the User Out
+        """
+        unset_jwt_cookies
+        db.session.commit()
+        return {"message": "Successfully Logged Out"}, HTTPStatus.OK
