@@ -9,9 +9,16 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 class Config:
     SECRET_KEY = config('SECRET_KEY', default='my-secret-key')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(hours=24)
+
+
+
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=24)
     JWT_SECRET_KEY = config('JWT_SECRET_KEY')
+    # cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+    CACHE_TYPE = config('CACHE_TYPE')
+
     # MAIL_SERVER = 'smtp@gmail.com'
     # MAIL_PORT = 587
     # MAIL_USE_TLS = True
@@ -36,6 +43,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     pass
+
 
 config_dict = {
     'dev': DevelopmentConfig,
