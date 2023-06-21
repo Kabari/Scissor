@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
+                <li><a class="button" id="link-history-button" href="#">Link History</a></li>
+                <li><a class="button" href="{{ url_for('analytics_page') }}">Analytics</a></li>
+                <li><a class="signup-button"id="logout-btn" href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="dashboard">
+            <h1 class="dashboard-heading">Dashboard</h1>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h2 class="card-title">Total Clicks</h2>
+                    <p class="card-value">1,234</p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Link Clicks Today</h2>
+                    <p class="card-value">567</p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Top Referrers</h2>
+                    <ul class="referrer-list">
+                        <li>Referrer 1</li>
+                        <li>Referrer 2</li>
+                        <li>Referrer 3</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script src="/static/js/script.js"></script>
+</body>
+
+</html>

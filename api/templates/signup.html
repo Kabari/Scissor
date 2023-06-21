@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scissor - Signup</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ url_for('index') }}">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" href="#">Features</a></li>
+                <li><a class="button" href="#">Pricing</a></li>
+                <li><a class="signup-button" href="{{ url_for('signup_page') }}">Get Started</a></li>
+                <li><a class="button" href="{{ url_for('login_page') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="signup-page">
+        <div class="signup-container">
+            <h1>Create an Account</h1>
+
+            <form class="signup-form" id="signup-form" method="POST">
+                <div class="form-group">
+                    <input type="text" id="firstName" name="first_name" placeholder="First Name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="lastName" name="last_name" placeholder="Last Name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required
+                        autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm Password"
+                        required autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="signup-button" id="signup-button">Sign Up</button>
+            </form>
+
+            <p class="login-link">Already have an account? <a href="{{ url_for('login_page') }}">Login</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Scissor. All rights reserved.</p>
+    </footer>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/static/js/signup.js"></script>
+</body>
+
+</html>

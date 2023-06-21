@@ -61,5 +61,3 @@ class UserTestCase(unittest.TestCase):
         assert data['email'] == 'testuser@test.com'
         assert response.status_code == 200
 
-
-

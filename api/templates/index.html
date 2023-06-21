@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scissor - URL Shortening Service</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ url_for('index') }}">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" href="#">Features</a></li>
+                <li><a class="button" href="#">Pricing</a></li>
+                <li><a class="signup-button" href="{{ url_for('signup_page') }}">Get Started</a></li> <!-- Changed to signup-button class -->
+                <li><a class="button" id="login-link" href="{{ url_for('login_page') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Brief is the New Black</h1> <!-- Updated heading -->
+            <p>This is what inspires the team at Scissor. In today's world, it's important to keep things as short as
+                possible, and this applies to more concepts than you may realize. From music, speeches, to wedding
+                receptions, brief is the new black.</p> <!-- Updated description -->
+            <a class="cta-button" href="{{ url_for('signup_page') }}">Get Started</a>
+        </section>
+
+        <section class="features">
+            <h2>Features</h2>
+            <div class="card">
+                <div class="feature">
+                    <img src="feature-1.png" alt="Feature 1">
+                    <h3>URL Shortening</h3>
+                    <p>Shorten long URLs with just a click and make them easy to share on social media or through other
+                        channels.</p>
+                </div>
+                <div class="feature">
+                    <img src="feature-2.png" alt="Feature 2">
+                    <h3>Custom URLs</h3>
+                    <p>Create branded links by customizing your shortened URLs with your own domain name and reflecting
+                        your brand or content.</p>
+                </div>
+                <div class="feature">
+                    <img src="feature-3.png" alt="Feature 3">
+                    <h3>QR Code Generation</h3>
+                    <p>Generate QR codes for your shortened URLs and use them in promotional materials or on your
+                        website.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonial">
+            <h2>Testimonials</h2>
+            <div class="card">
+                <div class="testimonial-item">
+                    <img src="testimonial-1.jpg" alt="Testimonial 1">
+                    <blockquote>
+                        <p>"Scissor has made managing and sharing my links a breeze. It's a must-have tool for anyone
+                            looking to optimize their online presence."</p>
+                        <cite>John Doe</cite>
+                    </blockquote>
+                </div>
+                <div class="testimonial-item">
+                    <img src="testimonial-2.jpg" alt="Testimonial 2">
+                    <blockquote>
+                        <p>"I love how easy it is to create custom branded links with Scissor. It has helped me
+                            establish a consistent online identity for my business."</p>
+                        <cite>Jane Smith</cite>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- Link history section and footer omitted for brevity -->
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Scissor. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

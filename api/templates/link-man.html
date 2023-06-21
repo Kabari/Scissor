@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Link Management - Scissor</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
+                <li><a class="button" id="link-history-button" href="{{ url_for('manage_page') }}">Link History</a></li>
+                <li><a class="button" href="{{ url_for('analytics_page') }}">Analytics</a></li>analytics_page
+                <li><a class="signup-button" id="logout-btn" href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="link-management-container">
+            <h2 class="link-management-heading">Link Management</h2>
+
+            <!-- Link List -->
+            <div class="link-list">
+                <!-- Link Item -->
+                <div class="link-item">
+                    <div class="link-content">
+                        <div class="link-original-url">Original URL: </div>
+                        <div class="">Short URL: <a id="link-short-url" href="" target="_blank" rel="noopener noreferrer"></a>
+                        </div>
+                        <div class="link-date">Date: </div>
+                    </div>
+                    <div class="link-actions">
+                        <button class="copy-button">Copy</button>
+                        <button class="edit-link">Edit</button>
+                        <button class="add-alias">Add Alias</button>
+                        <button class="analytics-button" id="analytics-button">Track Performance</button>
+                        <button class="categorize-link">Categorize</button>
+                    </div>
+                </div>
+                <!-- Add more link items here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/static/js/script.js"></script>
+    <script src="/static/js/link-man.js"></script>
+
+    <footer>
+        <p>&copy; 2023 Scissor. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

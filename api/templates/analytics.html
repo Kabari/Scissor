@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scissor - Analytics</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" href="#">Shorten URL</a></li>
+                <li><a class="button" href="{{ url_for('manage_page') }}">Link History</a></li>
+                <li><a class="button" href="{{ url_for('analytics_page') }}">Analytics</a></li>
+                <li><a class="signup-button" href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Analytics</h1>
+    <h2>Clicks for Short URL: <span id="short-url"></span></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Click ID</th>
+                <th>Timestamp</th>
+                <th>Referrer</th>
+                <th>User Agent</th>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody id="clicks-table-body"></tbody>
+    </table>
+    
+    
+
+    <div class="container">
+        <section class="analytics">
+            <h1 class="page-heading">Analytics</h1>
+            <div class="chart">
+                <!-- Insert your chart here -->
+                <canvas id="chart"></canvas>
+                <!-- <canvas id="chart1"></canvas>
+                <canvas id="chart2"></canvas> -->
+
+            </div>
+            <div class="chart">
+                <!-- Insert your chart here -->
+                <!-- <canvas id="chart"></canvas> -->
+                <canvas id="chart1"></canvas>
+                <!-- <canvas id="chart2"></canvas> -->
+
+            </div>
+            <div class="chart">
+                <!-- Insert your chart here -->
+                <!-- <canvas id="chart"></canvas> -->
+                <!-- <canvas id="chart1"></canvas> -->
+                <canvas id="chart2"></canvas>
+
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <h2 class="stat-title">Total Clicks</h2>
+                    <p class="stat-value">1,234</p>
+                </div>
+                <div class="stat-item">
+                    <h2 class="stat-title">Unique Clicks</h2>
+                    <p class="stat-value">567</p>
+                </div>
+                <div class="stat-item">
+                    <h2 class="stat-title">Top Countries</h2>
+                    <ul class="country-list">
+                        <li>Country 1</li>
+                        <li>Country 2</li>
+                        <li>Country 3</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Scissor. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+        // Get the chart canvas element
+        const chartCanvas = document.getElementById('chart');
+
+        // Create the chart
+        const chart = new Chart(chartCanvas, {
+            type: 'bar', // Specify the chart type (e.g., bar, line, pie)
+            data: {
+                labels: ['Label 1', 'Label 2', 'Label 3'], // Add your labels here
+                datasets: [{
+                    label: 'Data', // Add a label for the dataset
+                    data: [10, 20, 30], // Add your data values here
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Specify the background color for the bars
+                    borderColor: 'rgba(54, 162, 235, 1)', // Specify the border color for the bars
+                    borderWidth: 1 // Specify the border width for the bars
+                }]
+            },
+            options: {
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false, // Prevent the chart from being stretched
+                scales: {
+                    y: {
+                        beginAtZero: true // Start the y-axis from zero
+                    }
+                }
+            }
+        });
+
+
+        // Get the chart canvas element
+            const chartCanvas1 = document.getElementById('chart1');
+        // Create the chart
+            const chart1 = new Chart(chartCanvas1, {
+                type: 'line', // Use line chart type
+                data: {
+                    labels: ['Label 1', 'Label 2', 'Label 3'], // Add your labels here
+                    datasets: [{
+                        label: 'Data', // Add a label for the dataset
+                        data: [10, 20, 30], // Add your data values here
+                        borderColor: 'rgba(75, 192, 192, 1)', // Specify the line color
+                        fill: false // Disable area fill
+                    }]
+                },
+                options: {
+                    responsive: true, // Make the chart responsive
+                    maintainAspectRatio: false, // Prevent the chart from being stretched
+                    scales: {
+                        y: {
+                            beginAtZero: true // Start the y-axis from zero
+                        }
+                    }
+                }
+            });
+
+            // Get the chart canvas element
+            const chartCanvas2 = document.getElementById('chart2');
+            // Create the chart
+            const chart2 = new Chart(chartCanvas2, {
+                type: 'pie', // Use pie chart type
+                data: {
+                    labels: ['Label 1', 'Label 2', 'Label 3'], // Add your labels here
+                    datasets: [{
+                        label: 'Data', // Add a label for the dataset
+                        data: [10, 20, 30], // Add your data values here
+                        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 205, 86, 0.5)'], // Specify the background colors for the pie slices
+                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 205, 86, 1)'], // Specify the border colors for the pie slices
+                        borderWidth: 1 // Specify the border width for the pie slices
+                    }]
+                },
+                options: {
+                    responsive: true, // Make the chart responsive
+                    maintainAspectRatio: false // Prevent the chart from being stretched
+                }
+            });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/link-man.js"></script>
+</body>
+
+</html>

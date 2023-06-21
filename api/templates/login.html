@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scissor - Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ url_for('index') }}">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" href="#">Features</a></li>
+                <li><a class="button" href="#">Pricing</a></li>
+                <li><a class="signup-button" href="{{ url_for('signup_page') }}">Get Started</a></li>
+                <li><a class="button" href="{{ url_for('login_page') }}">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="login-page">
+        <div class="login-container">
+            <h1>Login to Your Account</h1>
+
+            <form class="login-form" id="login-form" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" class="login-button" id="login-button">Log In</button>
+            </form>
+
+            <p class="signup-link">Don't have an account? <a id="signup-link" href="{{ url_for('signup_page') }}">Sign Up</a></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Scissor. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/static/js/login.js"></script>
+</body>
+
+</html>
