@@ -63,7 +63,7 @@ login_model = auth_ns.model(
 
 @auth_ns.route('/signup')
 class Signup(Resource):
-    @auth_ns.expect(signup_model)
+    @auth_ns.expect(signup_model, validate=False)
     @auth_ns.marshal_with(user_model, code=HTTPStatus.CREATED)
     @auth_ns.doc(description='Register a new account',
                 responses={
@@ -72,7 +72,8 @@ class Signup(Resource):
                 HTTPStatus.CONFLICT: 'User already exists'
             })
     def post(self):
-        data = request.get_json()
+        print("Signup endpoint called")  # Add this line
+        data = request.json
 
         user = User.query.filter_by(email=data['email']).first()
 
@@ -80,18 +81,29 @@ class Signup(Resource):
             return {
                 'message': 'User already exists'
             }, HTTPStatus.BAD_REQUEST
+        
+        password = data.get('password')
+        confirm_password = data.get('confirm_password')
+
+        if password != confirm_password:
+            return {
+                'message': 'Passwords do not match'
+            }, HTTPStatus.BAD_REQUEST
+
 
         new_user = User(
             first_name = data.get('first_name'),
             last_name = data.get('last_name'),
             email = data.get('email'),
-            password_hash = generate_password_hash(data.get('password')),
+            password_hash = generate_password_hash(password),
+            # confirm_password_hash = generate_password_hash(data.get('confirm_password')),
             is_verified=False
         )
 
         new_user.save()
 
         return new_user, HTTPStatus.CREATED
+    
         # token = generate_verification_token()
         # verification_url = f"http://localhost:5000/api/auth/verify_email/token={token}"
         # send_verification_email(new_user.email, verification_url)
@@ -183,6 +195,7 @@ class Login(Resource):
 
     @auth_ns.expect(login_model)
     def post(self):
+        print("Login endpoint called")  # Add this line
         data = request.get_json()
 
         email = data.get('email')
@@ -193,7 +206,7 @@ class Login(Resource):
         # if not user:
         #     return {
         #         'message': 'User does not exist'
-        #     }, HTTPStatus.NOT_FOUND
+        #     }, HTTPStatus.UNAUTHORIZED
 
         if (user is not None) and check_password_hash(user.password_hash, password):
             access_token = create_access_token(identity=user.email)
@@ -229,6 +242,7 @@ class Refresh(Resource):
 class Logout(Resource):
     @jwt_required()
     def post(self):
+        print("Endpoint called!!!")
         """
         Log the User Out
         """
