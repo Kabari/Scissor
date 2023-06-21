@@ -1,5 +1,5 @@
 import uuid
-from flask import request, redirect, send_file, make_response
+from flask import render_template, request, redirect, send_file, make_response
 from flask_restx import Resource, Namespace, fields, abort
 from ..models.url import Url, generate_short_url
 from ..models.user import User
@@ -23,15 +23,15 @@ url_ns = Namespace('url', description='Shorten related operations')
 
 url_model = url_ns.model(
     'Url', {
-        'id': fields.Integer(),
-        'uuid': fields.String(max_length=16, description='Shortened URL unique identifier'),
+        # 'id': fields.Integer(),
+        # 'uuid': fields.String(max_length=16, description='Shortened URL unique identifier'),
         'long_url': fields.String(required=True, max_length=1000, description='URL to be shortened'),
         'short_url': fields.String(required=True, max_length=6, description='Shortened URL'),
-        'custom_domain': fields.String(required=False, max_length=255, description='Custom URL'),
-        'user_id': fields.String(description='User ID'),
+        # 'custom_domain': fields.String(required=False, max_length=255, description='Custom URL'),
+        # 'user_id': fields.String(description='User ID'),
         'created_at': fields.DateTime(description='Shortened URL creation date'),
-        'qr_code': fields.String(description='QR code of the short url'),
-        'clicks': fields.List(fields.String(description='No of clicks for the url'))
+        # 'qr_code': fields.String(description='QR code of the short url'),
+        # 'clicks': fields.List(fields.String(description='No of clicks for the url'))
     }
 )
 
@@ -57,17 +57,11 @@ shortened_url_model = url_ns.model(
         'created_at': fields.DateTime(description='Shortened URL creation date'),
         # 'user_uuid': fields.String(description='User UUID'),
         # 'uuid': fields.String(max_length=36, description='Shortened URL unique identifier'),
-        'user_id': fields.String(description='User ID'),
+        # 'user_id': fields.String(description='User ID'),
         # 'long_url': fields.String(required=True, max_length=1000, description='URL to be shortened')
     }
 )
 
-# shortened_url = shorten_ns.model(
-#     'ShortenedUrl', {
-#         'original_url': fields.String(required=True, max_length=1000, description='URL to be shortened'),
-#         'shortened_url': fields.String(required=True, max_length=10, description='Shortened URL')
-#     }
-# )
 
 @url_ns.route('/create')
 class CreateUrl(Resource):
@@ -75,27 +69,15 @@ class CreateUrl(Resource):
     @url_ns.marshal_with(shortened_url_model)
     @jwt_required()
     def post(self):
+        print('Enpoint called!!!!!')
         email = get_jwt_identity()
 
         data = request.get_json()
         long_url = data.get('long_url')
-        custom_domain = data.get('custom_domain')
-        # user_id = current
-
-        # short_url = cache.get(long_url)
-        # if short_url is not None:
-        #     response = {
-        #         'short_url': short_url
-        #     }
-        #     return response
+        # custom_domain = data.get('custom_domain')
 
         if not validate_url(long_url):
             abort(HTTPStatus.BAD_REQUEST, message='Invalid URL')
-
-
-        # user = User.query.filter_by(id=id).first()
-        # if user_id != user:
-        #     abort(HTTPStatus.FORBIDDEN, message='You are not authorized to perform this action')
 
         if long_url:
             short_url = generate_short_url()
@@ -106,11 +88,12 @@ class CreateUrl(Resource):
             url = Url(
                 long_url=long_url,
                 short_url=short_url,
-                custom_domain=custom_domain,
+                # custom_domain=custom_domain,
                 user_id=email
             )
             url.save()
             return url, HTTPStatus.CREATED
+        # return render_template('create_short_url.html'), HTTPStatus.OK
 
 
 @url_ns.route('/<short_url>')
@@ -126,7 +109,8 @@ class RedirectUrl(Resource):
                 referrer=request.referrer
             )
             click.save()
-            return {'redirect_url': url.long_url}, HTTPStatus.OK
+            
+            return redirect(url.long_url)
         else:
             abort(HTTPStatus.NOT_FOUND, message='Invalid short URL')
             
@@ -189,6 +173,7 @@ class AllUrls(Resource):
     @url_ns.marshal_list_with(url_model)
     @jwt_required()
     def get(self):
+        print("Endpoint initiated!!!!!")
         email = get_jwt_identity()
         user = User.query.filter_by(email=email).first()
         if user is None:
@@ -203,20 +188,54 @@ class AllUrls(Resource):
         #     return response, HTTPStatus.NOT_FOUND
 
 
-@url_ns.route('/<short_url>/stats')
-class UrlStats(Resource):
+# @url_ns.route('/<short_url>/stats')
+# class UrlStats(Resource):
+#     def get(self, short_url):
+#         url = Url.query.filter_by(short_url=short_url).first()
+#         if url:
+#             response = {
+#                 'clicks': url.clicks
+#             }
+#             return response, HTTPStatus.OK
+#         else:
+#             response = {
+#                 'message': 'Invalid short url'
+#             }
+#             return response, HTTPStatus.NOT_FOUND
+
+
+
+
+@url_ns.route('/analytics/<short_url>')
+class UrlAnalytics(Resource):
+    # print("Endpoint started")
     def get(self, short_url):
+        print("Endpoint initiated!!!!!")
         url = Url.query.filter_by(short_url=short_url).first()
         if url:
+            clicks = Click.query.filter_by(url_id=url.id).all()
+            click_data = []
+            for click in clicks:
+                click_data.append({
+                    'id': click.id,
+                    'timestamp': str(click.timestamp),
+                    'ip_address': click.ip_address,
+                    'referrer': click.referrer,
+                    'user_agent': click.user_agent
+                })
             response = {
-                'clicks': url.clicks
+                'short_url': short_url,
+                'clicks': click_data
             }
             return response, HTTPStatus.OK
         else:
             response = {
-                'message': 'Invalid short url'
+                'message': 'Invalid short URL'
             }
             return response, HTTPStatus.NOT_FOUND
+
+
+
         
 
 @url_ns.route('/<short_url>/qr-code')
