@@ -32,9 +32,14 @@ def create_page():
 def manage_page():
     return render_template('link-man.html')
 
-@app.route('/analytics/', methods=['GET', 'POST'])
-def analytics_page():
-    return render_template('analytics.html')
+@app.route('/analytics/<short_url>')
+def analytics_page(short_url):
+    return render_template('analytics.html', short_url=short_url)
+
+
+@app.route('/qr-code/<short_url>')
+def qr_code_page(short_url):
+    return render_template('qr-code.html', short_url=short_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
