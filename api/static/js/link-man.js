@@ -1,17 +1,6 @@
-// // // Create the track performance button
-// const performanceButton = document.getElementById("analytics-button");
-// // performanceButton.classList.add("analytics-button");
-// // performanceButton.textContent = "Track Performance";
-// performanceButton.addEventListener("click", () => {
-//   // Open the analytics page for the selected URL
-//   alert("I am here");
-//   console.log("commandant called!!!");
-//   window.open(`/url/${url.short_url}/analytics`, "_blank");
-// });
-
 // Make a GET request to fetch the URL data
-// const linkList = document.querySelector(".link-list");
-// linkList.textContent = "";
+const linkList = document.querySelector(".link-list");
+linkList.textContent = "";
 
 const access_token = localStorage.getItem("access_token");
 axios
@@ -83,21 +72,32 @@ axios
       });
       linkActions.appendChild(copyButton);
 
-      // Create the track performance button
       const trackPerformanceButton = document.createElement("button");
       trackPerformanceButton.classList.add("analytics-button");
       trackPerformanceButton.textContent = "Track Performance";
       linkActions.appendChild(trackPerformanceButton);
       trackPerformanceButton.addEventListener("click", () => {
-        //
-        // Open the analytics page for the selected URL
-        window.open(
-          `/analytics?shortURL=${encodeURIComponent(url.short_url)}`,
-          "_blank"
-        );
-        // window.open(`/url/${encodeURIComponent(url.short_url)}/analytics`, "_blank");
-        // console.log("commandant called!!!");
+        const shortUrl = url.short_url;
+        // window.open(`/url/analytics/${shortUrl}`, "_blank");
+        window.location.href = `/analytics/${shortUrl}`;
+        // window.location.href = `/analytics?shortURL=${encodeURIComponent(shortUrl)}`;
       });
+
+      // Create the QR code button
+      const qrCodeButton = document.createElement("button");
+      qrCodeButton.classList.add("qr-code-button");
+      qrCodeButton.textContent = "QR Code";
+      qrCodeButton.addEventListener("click", () => {
+        const shortUrl = url.short_url;
+        // Open the QR code page for the selected URL
+        // window.open(
+        //   `/url/${encodeURIComponent(url.short_url)}/qr-code`,
+        //   "_blank"
+        // );
+        window.location.href = `/qr-code/${shortUrl}`;
+      });
+
+      linkActions.appendChild(qrCodeButton);
 
       // Create the other buttons (Edit, Add Alias, Track Performance, Categorize)
       const buttons = [
