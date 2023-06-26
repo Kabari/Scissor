@@ -13,8 +13,8 @@ class Config:
 
 
 
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=10)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=24)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_SECRET_KEY = config('JWT_SECRET_KEY')
     # cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
     CACHE_TYPE = config('CACHE_TYPE')
