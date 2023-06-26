@@ -10,13 +10,14 @@
     <header>
         <nav>
             <div class="logo">
-                <a href="#">Scissor</a>
+                <a href="{{ url_for('dashboard_page') }}">Scissor</a>
             </div>
             <ul class="nav-links">
+                <li><a class="button" href="{{ url_for('dashboard_page') }}">Dashboard</a></li>
                 <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
                 <li><a class="button" id="link-history-button" href="{{ url_for('manage_page') }}">Link History</a></li>
-                <li><a class="button" href="{{ url_for('analytics_page') }}">Analytics</a></li>analytics_page
-                <li><a class="signup-button" id="logout-btn" href="#">Logout</a></li>
+                
+                <li><a class="logout-btn" id="logout-btn" href="#">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -52,6 +53,8 @@
 
     <script src="/static/js/script.js"></script>
     <script src="/static/js/link-man.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <!-- <script src="/static/js/authentication.js"></script> -->
 
     <footer>
         <p>&copy; 2023 Scissor. All rights reserved.</p>

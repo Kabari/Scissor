@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scissor - URL Shortening Service</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body>
@@ -15,8 +16,8 @@
                 <a href="{{ url_for('index') }}">Scissor</a>
             </div>
             <ul class="nav-links">
-                <li><a class="button" href="#">Features</a></li>
-                <li><a class="button" href="#">Pricing</a></li>
+                <!-- <li><a class="button" href="#">Features</a></li>
+                <li><a class="button" href="#">Pricing</a></li> -->
                 <li><a class="signup-button" href="{{ url_for('signup_page') }}">Get Started</a></li> <!-- Changed to signup-button class -->
                 <li><a class="button" id="login-link" href="{{ url_for('login_page') }}">Login</a></li>
             </ul>
@@ -36,19 +37,22 @@
             <h2>Features</h2>
             <div class="card">
                 <div class="feature">
-                    <img src="feature-1.png" alt="Feature 1">
+                    <!-- <img src="feature-1.png" alt="Feature 1"> -->
+                    <i class="fas fa-link"></i>
                     <h3>URL Shortening</h3>
                     <p>Shorten long URLs with just a click and make them easy to share on social media or through other
                         channels.</p>
                 </div>
                 <div class="feature">
-                    <img src="feature-2.png" alt="Feature 2">
+                    <!-- <img src="feature-2.png" alt="Feature 2"> -->
+                    <i class="fas fa-link"></i>
                     <h3>Custom URLs</h3>
                     <p>Create branded links by customizing your shortened URLs with your own domain name and reflecting
                         your brand or content.</p>
                 </div>
                 <div class="feature">
-                    <img src="feature-3.png" alt="Feature 3">
+                    <!-- <img src="feature-3.png" alt="Feature 3"> -->
+                    <i class="fas fa-qrcode"></i>
                     <h3>QR Code Generation</h3>
                     <p>Generate QR codes for your shortened URLs and use them in promotional materials or on your
                         website.</p>
@@ -60,7 +64,7 @@
             <h2>Testimonials</h2>
             <div class="card">
                 <div class="testimonial-item">
-                    <img src="testimonial-1.jpg" alt="Testimonial 1">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Testimonial 1">
                     <blockquote>
                         <p>"Scissor has made managing and sharing my links a breeze. It's a must-have tool for anyone
                             looking to optimize their online presence."</p>
@@ -68,7 +72,7 @@
                     </blockquote>
                 </div>
                 <div class="testimonial-item">
-                    <img src="testimonial-2.jpg" alt="Testimonial 2">
+                    <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Testimonial 2">
                     <blockquote>
                         <p>"I love how easy it is to create custom branded links with Scissor. It has helped me
                             establish a consistent online identity for my business."</p>
@@ -78,7 +82,7 @@
             </div>
         </section>
 
-        <!-- Link history section and footer omitted for brevity -->
+        
     </main>
 
     <footer>

@@ -9,13 +9,14 @@
     <header>
         <nav>
             <div class="logo">
-                <a href="#">Scissor</a>
+                <a href="{{ url_for('dashboard_page') }}">Scissor</a>
             </div>
             <ul class="nav-links">
+                <li><a class="button" href="{{ url_for('dashboard_page') }}">Dashboard</a></li>
                 <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
                 <li><a class="button" id="link-history-button" href="#">Link History</a></li>
-                <li><a class="button" href="{{ url_for('analytics_page') }}">Analytics</a></li>
-                <li><a class="signup-button"id="logout-btn" href="#">Logout</a></li>
+                
+                <li><a class="logout-btn" id="logout-btn" href="#">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -44,7 +45,7 @@
         </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
+
     <script src="/static/js/script.js"></script>
 </body>
 

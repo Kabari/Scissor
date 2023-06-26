@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scissor - Analytics</title>
     <link rel="stylesheet" href="/static/css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <title>Scissor - QR Code</title>
 </head>
 
 <body>
@@ -18,44 +16,25 @@
             </div>
             <ul class="nav-links">
                 <li><a class="button" href="{{ url_for('dashboard_page') }}">Dashboard</a></li>
-                <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
+                <li><a class="button" href="#">Shorten URL</a></li>
                 <li><a class="button" href="{{ url_for('manage_page') }}">Link History</a></li>
-
                 <li><a class="logout-btn" id="logout-btn" href="#">Logout</a></li>
             </ul>
         </nav>
     </header>
 
-    <h1>Analytics</h1>
-    <h2>Clicks for Short URL: <span id="short_url"></span></h2>
+    <main>
+        <h2>QR Code</h2>
+        <div class="qr-code-container">
+            <img id="qr-code-image" src="#" alt="QR Code">
+            <button id="download-button">Download QR Code</button>
+        </div>
+    </main>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Click ID</th>
-                <th>IP Address</th>
-                <th>Referrer</th>
-                <th>Timestamp</th>
-                <th>User Agent</th>
-            </tr>
-        </thead>
-        <tbody id="clicks-table-body">
-
-        </tbody>
-    </table>
-
-
-    <footer>
-        <p>&copy; 2023 Scissor. All rights reserved.</p>
-    </footer>
-
+    <!-- Include your JavaScript code here to generate the QR code image -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/static/js/link-man.js"></script>
     <script src="/static/js/script.js"></script>
-    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/qr-code.js"></script>
 </body>
 
 </html>
-
-
-
