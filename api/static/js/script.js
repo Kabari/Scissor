@@ -311,7 +311,7 @@ function handleLogoutButtonClick() {
 }
 
 // Attach the click event listener to the "Logout" button
-const logoutBtn = document.getElementById("logout-btn");
+const logoutBtn = document.querySelector(".logout-btn");
 logoutBtn.addEventListener("click", handleLogoutButtonClick);
 
 //!! Redirect to Original URL
