@@ -1,23 +1,11 @@
-// // // Get the URL parameters from the query string
-// // const params = new URLSearchParams(window.location.search);
-// // const shortUrl = params.get("short_url").value;
-
-// // // Set the short URL in the HTML
-// // document.getElementById("short-url").textContent = shortUrl;
-
-// const access_token = localStorage.getItem("access_token");
-
-// !!!!!!!!!!!!!!!!!!!!!!!!
-
 document.addEventListener("DOMContentLoaded", function () {
   const access_token = localStorage.getItem("access_token");
 
-  // Make a GET request to fetch the click data
-  const urlParams = new URLSearchParams(window.location.search);
-  const shortUrl = urlParams.get("shortURL");
+  const currentUrl = window.location.href;
+  const urlParts = currentUrl.split("/");
+  const shortUrl = urlParts[urlParts.length - 1];
 
-  // Fetch the click information using Axios
-
+  // Make a request to the analytics endpoint
   axios
     .get(`/url/analytics/${shortUrl}`, {
       headers: {
@@ -25,11 +13,20 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     })
     .then((response) => {
-      const clickData = response.data;
+      // Render the response in the HTML
+      const clickData = response.data.clicks;
       console.log("Click data:", clickData);
+
+      // Use the analyticsData to update your HTML elements accordingly
+
+      const shortUrlSpan = document.getElementById("short_url");
+      shortUrlSpan.textContent = shortUrl;
 
       // Get the table body element
       const tableBody = document.getElementById("clicks-table-body");
+
+      // Clear existing table rows
+      tableBody.innerHTML = "";
 
       // Loop through the click data and create table rows
       clickData.forEach((click) => {
@@ -38,65 +35,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Create cells for each column
         const clickIdCell = document.createElement("td");
-        clickIdCell.textContent = click.click_id;
+        clickIdCell.textContent = click.id;
         row.appendChild(clickIdCell);
+
+        const ipAddressCell = document.createElement("td");
+        ipAddressCell.textContent = click.ip_address;
+        row.appendChild(ipAddressCell);
+        
+                const referrerCell = document.createElement("td");
+                referrerCell.textContent = click.referrer;
+                row.appendChild(referrerCell);
 
         const timestampCell = document.createElement("td");
         timestampCell.textContent = click.timestamp;
         row.appendChild(timestampCell);
 
-        const referrerCell = document.createElement("td");
-        referrerCell.textContent = click.referrer;
-        row.appendChild(referrerCell);
-
         const userAgentCell = document.createElement("td");
         userAgentCell.textContent = click.user_agent;
         row.appendChild(userAgentCell);
 
-        const ipAddressCell = document.createElement("td");
-        ipAddressCell.textContent = click.ip_address;
-        row.appendChild(ipAddressCell);
 
         // Append the row to the table body
         tableBody.appendChild(row);
       });
-
-      // Generate chart data
-      const chartLabels = clickData.map((click) => click.timestamp);
-      const chartData = clickData.map((click) => click.click_id);
-
-      // Get the chart canvas element
-      const chartCanvas = document.getElementById("chart");
-
-      // Create the chart
-      const chart = new Chart(chartCanvas, {
-        type: "bar", // Use bar chart type
-        data: {
-          labels: chartLabels,
-          datasets: [
-            {
-              label: "Click ID",
-              data: chartData,
-              backgroundColor: "rgba(54, 162, 235, 0.5)",
-              borderColor: "rgba(54, 162, 235, 1)",
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
     })
     .catch((error) => {
-      console.error("Failed to fetch click data:", error);
+      console.error("Error retrieving analytics:", error);
     });
-
-  // !!!!!!!!!!!!!!!!!!!!!!
 });
+
+// function isTokenExpired(token) {
+//   const decodedToken = jwt_decode(token);
+//   const currentTime = Date.now() / 1000;
+//   return decodedToken.exp < currentTime;
+// }
+
+// // Get the access token from localStorage
+// const accessToken = localStorage.getItem('access_token');
+
+// // Check if the access token is expired
+// if (isTokenExpired(accessToken)) {
+//   // Redirect to the login page
+//   window.location.href = '/login.html';
+// }
+
+
+// // Get the refresh token from localStorage
+// const refreshToken = localStorage.getItem('refresh_token');
+
+// // Check if the refresh token is expired
+// if (isTokenExpired(refreshToken)) {
+//   // Redirect to the login page
+//   window.location.href = '/login.html';
+// }
