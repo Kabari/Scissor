@@ -13,7 +13,8 @@ import qrcode
 import io
 from PIL import Image
 import requests
-# from ...api import cache
+import time
+# from ...api import 
 from flask_caching import Cache
 
 # cache = Cache(app, config={'CACHE_TYPE': 'simple'})
@@ -23,15 +24,12 @@ url_ns = Namespace('url', description='Shorten related operations')
 
 url_model = url_ns.model(
     'Url', {
-        # 'id': fields.Integer(),
-        # 'uuid': fields.String(max_length=16, description='Shortened URL unique identifier'),
         'long_url': fields.String(required=True, max_length=1000, description='URL to be shortened'),
         'short_url': fields.String(required=True, max_length=6, description='Shortened URL'),
         # 'custom_domain': fields.String(required=False, max_length=255, description='Custom URL'),
         # 'user_id': fields.String(description='User ID'),
         'created_at': fields.DateTime(description='Shortened URL creation date'),
-        # 'qr_code': fields.String(description='QR code of the short url'),
-        # 'clicks': fields.List(fields.String(description='No of clicks for the url'))
+
     }
 )
 
@@ -238,9 +236,11 @@ class UrlAnalytics(Resource):
 
         
 
-@url_ns.route('/<short_url>/qr-code')
+@url_ns.route('/qr-code/<short_url>')
 class QrCode(Resource):
+    # @cache.cached(timeout=300)
     def get(self, short_url):
+        print("Endpoint initiated!!!!!")
         url = Url.query.filter_by(short_url=short_url).first()
         if url:
             qr_code_image = generate_qr_code(url.short_url)
@@ -295,6 +295,8 @@ class QrCode(Resource):
 
 
 def generate_qr_code(short_url):
+    # timestamp = int(time.time()) // 300  # Get the current timestamp and divide by 300 (5 minutes)
+    # data = f"{short_url}-{timestamp}"  # Combine short_url and timestamp
     qr = qrcode.QRCode(
         version=4,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
