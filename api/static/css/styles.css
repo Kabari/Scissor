@@ -58,7 +58,7 @@ nav .logo a {
     border-radius: 5px;
 }
 
-.nav-links li a.signup-button {
+.nav-links li a.logout-btn {
     /* Added signup-button class */
     padding: 0.5rem 1rem;
     background-color: #fff;
@@ -142,6 +142,10 @@ nav .logo a {
     text-align: center;
 }
 
+.fas {
+    font-size: 40px;
+}
+
 /*! Testimonial section styles */
 .testimonial {
     padding: 4rem 2rem;
@@ -165,7 +169,7 @@ nav .logo a {
 }
 
 .testimonial-item img {
-    width: 80px;
+    width: 50px;
     border-radius: 50%;
     margin-right: 1rem;
 }
@@ -285,7 +289,7 @@ footer {
 }
 
 
-/* Login page styles */
+/* !Login page styles */
 .login-page {
     display: flex;
     justify-content: center;
@@ -436,62 +440,6 @@ footer {
 
 /* Dashboard Page */
 
-
-
-/*! Settings Page */
-.settings-page {
-    padding: 20px;
-}
-
-.settings-header {
-    margin-bottom: 30px;
-}
-
-.settings-header h1 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-}
-
-.settings-form {
-    max-width: 500px;
-}
-
-.settings-form .form-group {
-    margin-bottom: 20px;
-}
-
-.settings-form label {
-    font-weight: bold;
-    color: #333;
-}
-
-.settings-form input[type="text"],
-.settings-form input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.settings-form button[type="submit"],
-.settings-form button.button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    background-color: #4caf50;
-    color: #fff;
-    cursor: pointer;
-}
-
-.settings-form button[type="submit"]:hover,
-.settings-form button.button:hover {
-    background-color: #45a049;
-}
-
-
 /*! Analytics Page */
 
 .analytics {
@@ -586,8 +534,6 @@ td:nth-child(5) {
 
 
 /*! link management */
-
-
 .link-management-container {
     padding: 20px;
 }
@@ -744,8 +690,9 @@ button:hover {
 .shortened-url h3,
 .qr-code-container h3 {
     font-size: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
+
 
 .shortened-url,
 .qr-code {
@@ -814,4 +761,170 @@ button:hover {
 .url-card-item .value {
     margin: 0;
     word-break: break-all;
+}
+
+
+/*!!!!!!!!!!!!!! .qr-code styles */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+.qr-code-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.qr-code-container img {
+    width: 400px;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 10px;
+}
+
+#download-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#download-button:hover {
+    background-color: #0d8ae6;
+}
+
+/*! Reset default styles and apply global styles */
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+
+    /* Header Styles */
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Hero Styles */
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    /* Features Styles */
+    .features {
+        flex-wrap: wrap;
+    }
+
+    .feature {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Testimonial Styles */
+    .testimonial {
+        flex-wrap: wrap;
+    }
+
+    .testimonial-item {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Link History Styles */
+    .link-history table {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Hero Styles */
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero p {
+        font-size: 0.8rem;
+    }
+
+    /* Features Styles */
+    .feature {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Testimonial Styles */
+    .testimonial-item {
+        flex-basis: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Link History Styles */
+    .link-history table {
+        font-size: 0.7rem;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+
+    /* Footer Styles */
+    footer {
+        padding: 1rem;
+    }
+
+    /* Contact Section Styles */
+    .contact-form {
+        max-width: 100%;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        padding: 0.25rem;
+    }
+
+    .contact-form button {
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Footer Styles */
+    footer {
+        padding: 1rem;
+    }
+
+    /* Contact Section Styles */
+    .contact-form {
+        max-width: 100%;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        padding: 0.25rem;
+    }
+
+    .contact-form button {
+        padding: 0.25rem 0.5rem;
+    }
 }
