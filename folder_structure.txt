@@ -1,0 +1,55 @@
+# |- api/
+# |   |- __init__.py
+# |   |- auth/
+# |   |   |- __init__.py
+# |   |   |- views.py
+# |   |
+# |   |- config/
+# |   |   |- __init__.py
+# |   |   |- config.py
+# |   |   |- db.sqlite3
+# |   |
+# |   |- models/
+# |   |   |- __init__.py
+# |   |   |- click.py
+# |   |   |- user.py   
+# |   |   |- url.py
+# |   |
+# |   |- shorten/
+# |   |   |- __init__.py
+# |   |   |- views.py
+# |   |
+# |   |- tests/
+# |   |   |- __init__.py
+# |   |   |- test_auth.py
+# |   |   |- test_shorten.py
+# |   |
+# |   |- utils/
+# |   |   |- __init__.py
+# |   |
+# |   |- __init__.py
+# |   
+# |- static/
+# |   |- css/
+# |   |   |- style.css
+# |   |
+# |   |- js/
+# |   |   |- script.js
+# |   
+# |- templates/
+# |   |- analytics.html
+# |   |- dashboard.html
+# |   |- history.html
+# |   |- index.html
+# |   |- landing.html
+# |   |- link_man.html
+# |   |- login.html
+# |   |- shorten.html
+# |   |- signup.html
+# |   |- qrcode.html
+# |   |
+# |- venv/
+# |- .env
+# |- .gitignore
+# |- requirements.txt
+# |- runserver.py
