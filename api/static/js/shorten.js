@@ -1,22 +1,24 @@
 // Add this code to your "shorten.js" file or within a <script> tag in your HTML
 const access_token = localStorage.getItem("access_token");
 
-const urlCard = document.querySelector(".url-card");
-urlCard.style.display = "none";
+// const urlCard = document.querySelector(".url-card");
+// urlCard.style.display = "none";
 
 // Function to update the URL card with the returned data and show it
 function updateUrlCard(data) {
   const longUrl = document.querySelector(".url-card .url-card-item .value");
+  // const shortCode = document.querySelector(".shortened-code");
   const shortUrl = document.querySelector(".shortened-url");
-  const date = document.querySelector(".url-card .date");
+  // const date = document.querySelector(".url-card .date");
 
-  longUrl.textContent = data.long_url;
+  // longUrl.textContent = data.long_url;
+  // shortCode.textContent = data.short_code;
   shortUrl.textContent = data.short_url;
-  date.textContent = formatDate(data.created_at); // You can customize the format of the date here
+  // date.textContent = formatDate(data.created_at); // You can customize the format of the date here
 
   // Show the URL card
-  const urlCard = document.querySelector(".url-card");
-  urlCard.style.display = "block";
+  // const urlCard = document.querySelector(".url-card");
+  // urlCard.style.display = "block";
 }
 
 // Function to handle the "Shorten" button click
