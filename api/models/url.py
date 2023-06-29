@@ -10,8 +10,10 @@ class Url(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String(16), nullable=False, unique=True)
     long_url = db.Column(db.String(2048), nullable=False)
-    short_url = db.Column(db.String(6), nullable=False, unique=True)
+    short_code = db.Column(db.String(6), nullable=False, unique=True)
+    short_url = db.Column(db.String(50), nullable=False, unique=True)
     custom_domain = db.Column(db.String(255), unique=True, nullable=True)
+    custom_url = db.Column(db.String(50), unique=True, nullable=True)
     user_id = db.Column(db.String, db.ForeignKey('user.email'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     qr_code = db.Column(db.String, nullable=True)
@@ -35,25 +37,35 @@ class Url(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_by_id(cls, id):
-        return cls.query.get_or_404(id)
-    
+    def get_total_urls(cls, email):
+        return Url.query.filter_by(user_id=email).count()
+
     @classmethod
-    def get_url_total_clicks(cls, id):
-        url = Url.query.filter_by(user_id=id).first()
-        total_clicks = url.clicks
+    def get_total_clicks(cls, email):
+        urls = Url.query.filter_by(user_id=email).all()
+        total_clicks = sum(len(url.clicks) for url in urls)
         return total_clicks
+
+    # @classmethod
+    # def get_by_id(cls, id):
+    #     return cls.query.get_or_404(id)
     
-    @classmethod
-    def get_total_clicks(cls, id):
-        urls = Url.query.filter_by(user_id=id).all()
-        total_clicks = sum([url.clicks for url in urls])
-        return total_clicks
+    # @classmethod
+    # def get_url_total_clicks(cls, id):
+    #     url = Url.query.filter_by(user_id=id).first()
+    #     total_clicks = url.clicks
+    #     return total_clicks
     
-    @classmethod
-    def get_total_urls(cls, id):
-        counter = Url.query.filter_by(user_id=id).count()
-        return counter
+    # @classmethod
+    # def get_total_clicks(cls, id):
+    #     urls = Url.query.filter_by(user_id=id).all()
+    #     total_clicks = sum([url.clicks for url in urls])
+    #     return total_clicks
+    
+    # @classmethod
+    # def get_total_urls(cls, id):
+    #     counter = Url.query.filter_by(user_id=id).count()
+    #     return counter
     
     @classmethod
     def check_url(cls, url):
@@ -64,13 +76,13 @@ class Url(db.Model):
             return False
         
 
-def generate_short_url(length=6):
+def generate_short_code(length=6):
     characters = string.ascii_letters + string.digits
-    short_url = ''.join(random.choice(characters) for _ in range(6))
-    # existing_short_code = ShortenedURL.query.filter_by(short_code=short_code).first()
+    short_code = ''.join(random.choice(characters) for _ in range(6))
+    # existing_short_code = Shortenedcode.query.filter_by(short_code=short_code).first()
     # if existing_short_code:
     #     return generate_short_code()
-    return short_url
+    return short_code
 
 
 
