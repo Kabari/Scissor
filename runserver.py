@@ -2,10 +2,11 @@
 
 from flask import Flask, render_template, url_for, redirect, request, abort
 from api import create_app
+from api.config.config import config_dict
 from http import HTTPStatus
 import requests
 # app = Flask(__name__, static_folder='static', template_folder='templates')
-app = create_app()
+app = create_app(config=config_dict['prod'])
 
 # Serve the webpages
 @app.route('/signup', methods=['GET', 'POST'])
@@ -47,4 +48,4 @@ def custom_url_page(short_url):
     return render_template('custom_url.html', short_url=short_url)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
