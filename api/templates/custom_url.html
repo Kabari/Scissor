@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom URL Page</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ url_for('dashboard_page') }}">Scissor</a>
+            </div>
+            <ul class="nav-links">
+                <li><a class="button" href="{{ url_for('dashboard_page') }}">Dashboard</a></li>
+                <li><a class="button" id="shorten-link" href="#">Shorten URL</a></li>
+                <li><a class="button" id="link-history-button" href="#">Link History</a></li>
+                <li><a class="logout-btn" id="logout-btn" href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Custom URL Page</h1>
+
+    <!-- <div>
+        <p id="long-url">Long URL: </p>
+        <p id="short-url">Short URL: </p>
+    </div> -->
+
+    <div>
+        <label for="custom-domain-input">Custom Domain:</label>
+        <input type="text" id="custom-domain-input">
+        <button class="button" id="custom-url-button">Generate Custom URL</button>
+    </div>
+
+    <div>
+        <p id="custom-url">Custom URL: </p>
+    </div>
+
+    <!-- Include Axios library -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+    <!-- Include custom_url.js -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/js/custom_url.js"></script>
+</body>
+
+</html>
