@@ -28,7 +28,7 @@ def create_page():
     return render_template('shorten.html')
 
 
-@app.route('/link-man', methods=['GET', 'POST'])
+@app.route('/link-man')
 def manage_page():
     return render_template('link-man.html')
 
@@ -40,6 +40,11 @@ def analytics_page(short_url):
 @app.route('/qr-code/<short_url>')
 def qr_code_page(short_url):
     return render_template('qr-code.html', short_url=short_url)
+
+
+@app.route('/custom_url/<short_url>')
+def custom_url_page(short_url):
+    return render_template('custom_url.html', short_url=short_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
