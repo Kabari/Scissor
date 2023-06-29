@@ -31,16 +31,38 @@ axios
       originalUrl.textContent = `Original URL: ${url.long_url}`;
       linkContent.appendChild(originalUrl);
 
-      // Create the short URL element
+      // Create the short CODE element
+      const shortCode = document.createElement("div");
+      shortCode.classList.add("link-short-code");
+      const shortCodeLink = document.createElement("a");
+      shortCodeLink.href = url.short_code;
+      shortCodeLink.target = "_blank";
+      shortCodeLink.rel = "noopener noreferrer";
+      shortCodeLink.textContent = `Short Code: ${url.short_code}`;
+      shortCode.appendChild(shortCodeLink);
+      linkContent.appendChild(shortCode);
+
+      // Create the short Url element
       const shortUrl = document.createElement("div");
       shortUrl.classList.add("link-short-url");
       const shortUrlLink = document.createElement("a");
       shortUrlLink.href = url.short_url;
       shortUrlLink.target = "_blank";
       shortUrlLink.rel = "noopener noreferrer";
-      shortUrlLink.textContent = `Short URL: ${url.short_url}`;
+      shortUrlLink.textContent = `Short Url: ${url.short_url}`;
       shortUrl.appendChild(shortUrlLink);
       linkContent.appendChild(shortUrl);
+
+      // Create the custom Url element
+      const customUrl = document.createElement("div");
+      customUrl.classList.add("link-custom-url");
+      const customUrlLink = document.createElement("a");
+      customUrlLink.href = url.custom_url;
+      customUrlLink.target = "_blank";
+      customUrlLink.rel = "noopener noreferrer";
+      customUrlLink.textContent = `custom Url: ${url.custom_url}`;
+      customUrl.appendChild(customUrlLink);
+      linkContent.appendChild(customUrl);
 
       // Create the date element
       const date = document.createElement("div");
@@ -77,9 +99,9 @@ axios
       trackPerformanceButton.textContent = "Track Performance";
       linkActions.appendChild(trackPerformanceButton);
       trackPerformanceButton.addEventListener("click", () => {
-        const shortUrl = url.short_url;
+        const shortCode = url.short_code;
         // window.open(`/url/analytics/${shortUrl}`, "_blank");
-        window.location.href = `/analytics/${shortUrl}`;
+        window.location.href = `/analytics/${shortCode}`;
         // window.location.href = `/analytics?shortURL=${encodeURIComponent(shortUrl)}`;
       });
 
@@ -88,23 +110,34 @@ axios
       qrCodeButton.classList.add("qr-code-button");
       qrCodeButton.textContent = "QR Code";
       qrCodeButton.addEventListener("click", () => {
-        const shortUrl = url.short_url;
+        const shortCode = url.short_code;
         // Open the QR code page for the selected URL
         // window.open(
         //   `/url/${encodeURIComponent(url.short_url)}/qr-code`,
         //   "_blank"
         // );
-        window.location.href = `/qr-code/${shortUrl}`;
+        window.location.href = `/qr-code/${shortCode}`;
       });
 
       linkActions.appendChild(qrCodeButton);
 
+      // Create the Add Alias button
+      const addAliasButton = document.createElement("button");
+      addAliasButton.classList.add("add-alias");
+      addAliasButton.textContent = "Add Alias";
+      addAliasButton.addEventListener("click", () => {
+        const shortCode = url.short_code;
+        // Redirect to the custom URL page
+        window.location.href = `/custom_url/${shortCode}`;
+      });
+      linkActions.appendChild(addAliasButton);
+
       // Create the other buttons (Edit, Add Alias, Track Performance, Categorize)
       const buttons = [
         "edit-link",
-        "add-alias",
+        // "add-alias",
         // "track-performance",
-        "categorize-link",
+        // "categorize-link",
       ];
       buttons.forEach((buttonClass) => {
         const button = document.createElement("button");
