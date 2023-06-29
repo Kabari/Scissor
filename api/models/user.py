@@ -22,7 +22,7 @@ class User(db.Model):
 
 
     def save(self):
-        self.uuid = str(uuid4())
+        self.uuid = str(uuid4(16))
         db.session.add(self)
         db.session.commit()
 
