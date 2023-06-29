@@ -315,9 +315,9 @@ const logoutBtn = document.querySelector(".logout-btn");
 logoutBtn.addEventListener("click", handleLogoutButtonClick);
 
 //!! Redirect to Original URL
-function redirectToLongUrl(shortUrl) {
+function redirectToLongUrl(shortCode) {
   axios
-    .get(`http://127.0.0.1:5000/url/${shortUrl}`)
+    .get(`${host}/url/${shortCode}`)
     .then((response) => {
       // Handle the redirect on the client-side
       window.location.href = response.request.responseURL;
@@ -587,56 +587,7 @@ linkHistoryButton.addEventListener("click", () => {
 
 
 
-// Retrieve data for pie chart
-const pieChartData = {
-  labels: ["Red", "Blue", "Yellow"],
-  datasets: [
-    {
-      data: [10, 20, 30],
-      backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-    },
-  ],
-};
 
-// Create pie chart instance
-const pieChartCtx = document.getElementById("pieChart").getContext("2d");
-const pieChart = new Chart(pieChartCtx, {
-  type: "pie",
-  data: pieChartData,
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    // Configure other chart options as needed
-  },
-});
-
-// Retrieve data for line graph
-const lineGraphData = {
-  labels: ["January", "February", "March", "April", "May", "June"],
-  datasets: [
-    {
-      label: "Data",
-      data: [12, 19, 3, 5, 2, 3],
-      fill: false,
-      borderColor: "#FF6384",
-      backgroundColor: "#FF6384",
-      tension: 0.1,
-    },
-  ],
-};
-
-// Create line graph instance
-const lineGraphCtx = document.getElementById("lineGraph").getContext("2d");
-const lineGraph = new Chart(lineGraphCtx, {
-  type: "line",
-  data: lineGraphData,
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    // Configure other chart options as needed
-  },
-});
 
 // !!!!!!!!!!!!!!!!!!!!!
 //!!!! copy link to clipboard!!
