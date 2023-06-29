@@ -7,24 +7,15 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 class Config:
-    SECRET_KEY = config('SECRET_KEY', default='my-secret-key')
+    # if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+    #     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    SECRET_KEY = os.getenv('SECRET_KEY', default='my-secret-key')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-
-
-
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=30)
-    JWT_SECRET_KEY = config('JWT_SECRET_KEY')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     # cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
-    CACHE_TYPE = config('CACHE_TYPE')
-
-    # MAIL_SERVER = 'smtp@gmail.com'
-    # MAIL_PORT = 587
-    # MAIL_USE_TLS = True
-    # MAIL_USERNAME = 'kabariirenaeus@gmail.com'
-    # MAIL_PASSWORD = 'dlrkfjyclgbhthuw'
-    # MAIL_DEFAULT_SENDER = 'kabariirenaeus@gmail.com'
+    CACHE_TYPE = os.getenv('CACHE_TYPE')
 
 
 class DevelopmentConfig(Config):
@@ -43,6 +34,9 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     pass
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI')  # !!!!!!!!!
+    # if SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        # SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
 
 config_dict = {
