@@ -5,13 +5,13 @@ const access_token = localStorage.getItem("access_token");
 // Function to extract the short URL from the current page URL
 const currentUrl = window.location.href;
 const urlParts = currentUrl.split("/");
-const shortUrl = urlParts[urlParts.length - 1];
+const shortCode = urlParts[urlParts.length - 1];
 
 
 
 // Make a GET request to fetch the QR code image
 axios
-  .get(`/url/qr-code/${shortUrl}`, {
+  .get(`/url/qr-code/${shortCode}`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
