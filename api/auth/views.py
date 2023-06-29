@@ -7,12 +7,7 @@ from ..utils import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import UUID
 from http import HTTPStatus
-# from flask_mail import Message, Mail
-# from datetime import datetime, timedelta
-# from ...api.__init__ import mail
 
-# mail = Mail()
-# token_expiration = timedelta(hours=2)
 
 auth_ns = Namespace('auth', description='Authentication related operations')
 
@@ -50,16 +45,6 @@ login_model = auth_ns.model(
     }
 )
 
-# def generate_verification_token():
-#         token = secrets.token_urlsafe(16)
-#         verification_token = token
-#         return verification_token
-
-
-# def send_verification_email(email, verification_url):
-#     message = Message('Verify Your Email', recipients=[email])
-#     message.body = f"Please click the link below to verify your email:\n{verification_url}"
-#     mail.send(message)
 
 @auth_ns.route('/signup')
 class Signup(Resource):
@@ -72,6 +57,9 @@ class Signup(Resource):
                 HTTPStatus.CONFLICT: 'User already exists'
             })
     def post(self):
+        """
+        Register a new account
+        """
         print("Signup endpoint called")  # Add this line
         data = request.json
 
@@ -104,97 +92,20 @@ class Signup(Resource):
 
         return new_user, HTTPStatus.CREATED
     
-        # token = generate_verification_token()
-        # verification_url = f"http://localhost:5000/api/auth/verify_email/token={token}"
-        # send_verification_email(new_user.email, verification_url)
-
-        # access_token = create_access_token(identity=new_user.email)
-        # refresh_token = create_refresh_token(identity=new_user.email)
-
-        # token = {
-        #     'access_token': access_token,
-        #     'refresh_token': refresh_token
-        # }
-
-        # response = {
-        #     'uuid': new_user.uuid,
-        #     'email': new_user.email,
-        #     'token': token 
-        # }
-
-    
-        # """send a verification email to the user's email address"""
-        # msg = Message(
-        #     subject='Email Verification',
-        #     sender='Scissor Team',
-        #     recipients=[new_user.email],
-        #     body=f'Thank you for signing up on scissor \nVerify your email by clicking on the link: http://localhost:5000/api/auth/verify_email?access_token={access_token}'
-        # )
-
         
-        # mail.send(msg)
-
-        # return {
-        #     'message': 'User created successfully. Check your email for verification'
-        # }, HTTPStatus.CREATED
-        
-
-
-    
-
-
-# @auth_ns.route('/resend_verification_email')
-# class ResendVerificationEmail(Resource):
-#     @auth_ns.doc(description='Resend verification email')
-#     @jwt_required()
-#     def get(self):
-#         current_user = get_jwt_identity()
-
-#         user = User.query.filter_by(email=current_user).first()
-
-#         if user.is_verified:
-#             return {
-#                 'message': 'User already verified'
-#             }, HTTPStatus.BAD_REQUEST
-        
-#         token = generate_verification_token()
-#         verification_url = f"http://localhost:5000/api/auth/verify_email/token={token}"
-#         send_verification_email(user.email, verification_url)
-
-#         return {
-#             'message': 'Verification email sent successfully'
-#         }, HTTPStatus.OK
-
-
-
-# @auth_ns.route('/verify_email/token=<string:token>')
-# class VerifyEmail(Resource):
-#     @auth_ns.doc(description='Verify user email address')
-#     @jwt_required()
-#     def get(self):
-#         current_user = get_jwt_identity()
-
-#         user = User.query.filter_by(email=current_user).first()
-
-#         if user.is_verified:
-#             return {
-#                 'message': 'User already verified'
-#             }, HTTPStatus.BAD_REQUEST
-        
-#         user.is_verified = True
-
-#         user.save()
-
-#         return {
-#             'message': 'User verified successfully'
-#         }, HTTPStatus.OK
-    
 
 @auth_ns.route('/login')
 class Login(Resource):
-
+    @auth_ns.doc(description='Login to your account',
+                 responses={
+                     HTTPStatus.OK: 'Success',
+                     HTTPStatus.UNAUTHORIZED: 'Invalid credentials'
+                     })
     @auth_ns.expect(login_model)
     def post(self):
+        """
+        Login to your account
+        """
         print("Login endpoint called")  # Add this line
         data = request.get_json()
 
@@ -226,9 +137,16 @@ class Login(Resource):
 
 @auth_ns.route('/refresh')
 class Refresh(Resource):
+    @auth_ns.doc(security='jwt',
+                    responses={
+                    HTTPStatus.OK: 'Success'
+                })
     # @jwt_refresh_token_required
     @jwt_required(refresh=True)
     def post(self):
+        """
+        Refresh the User's Access Token
+        """
         current_user = get_jwt_identity()
 
         access_token = create_access_token(identity=current_user)
@@ -240,6 +158,10 @@ class Refresh(Resource):
 
 @auth_ns.route('/logout')
 class Logout(Resource):
+    @auth_ns.doc(security='jwt',
+                 responses={
+                HTTPStatus.OK: 'Success'
+            })
     @jwt_required()
     def post(self):
         print("Endpoint called!!!")
