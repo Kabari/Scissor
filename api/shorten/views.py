@@ -1,7 +1,7 @@
 import uuid
 from flask import render_template, request, redirect, send_file, make_response
 from flask_restx import Resource, Namespace, fields, abort
-from ..models.url import Url, generate_short_url
+from ..models.url import Url, generate_short_code
 from ..models.user import User
 from ..models.click import Click
 from ..utils import db
@@ -14,18 +14,22 @@ import io
 from PIL import Image
 import requests
 import time
-# from ...api import 
-from flask_caching import Cache
+from ..extensions import cache, limiter
+# from .. import create_app
+# from flask_limiter import Limiter
+# from flask_limiter.util import get_remote_address
 
 # cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 
-url_ns = Namespace('url', description='Shorten related operations')
+url_ns = Namespace('url', description='Url related operations')
 
 url_model = url_ns.model(
     'Url', {
         'long_url': fields.String(required=True, max_length=1000, description='URL to be shortened'),
-        'short_url': fields.String(required=True, max_length=6, description='Shortened URL'),
+        'short_code': fields.String(required=True, max_length=6, description='Shortened Code'),
+        'short_url': fields.String(required=True, max_length=50, description='Shortened URL'),
+        'custom_url': fields.String(required=False, max_length=255, description='Custom URL'),
         # 'custom_domain': fields.String(required=False, max_length=255, description='Custom URL'),
         # 'user_id': fields.String(description='User ID'),
         'created_at': fields.DateTime(description='Shortened URL creation date'),
@@ -51,7 +55,8 @@ custom_domain_model = url_ns.model(
 shortened_url_model = url_ns.model(
     'ShortenedUrl', {
         'long_url': fields.String(required=True, max_length=1000, description='URL to be shortened'),
-        'short_url': fields.String(required=True, max_length=6, description='Shortened URL'),
+        'short_code': fields.String(required=True, max_length=6, description='Shortened code'),
+        'short_url': fields.String(required=True, max_length=50, description='Shortened URL'),
         'created_at': fields.DateTime(description='Shortened URL creation date'),
         # 'user_uuid': fields.String(description='User UUID'),
         # 'uuid': fields.String(max_length=36, description='Shortened URL unique identifier'),
@@ -60,13 +65,54 @@ shortened_url_model = url_ns.model(
     }
 )
 
+@url_ns.route('/dashboard')
+class Dashboard(Resource):
+    @url_ns.doc(responses={
+                    HTTPStatus.OK: 'Success',
+                    HTTPStatus.NOT_FOUND: 'User not found'},
+
+                description='Get the dashboard details')
+    @jwt_required()
+    def get(self):
+        """
+        Get the dashboard details
+        """
+        email = get_jwt_identity()
+        user = User.query.filter_by(email=email).first()
+        urls = Url.query.filter_by(user_id=user.email).all()
+        
+        if not user:
+            abort(HTTPStatus.NOT_FOUND, message='User not found')
+
+        total_urls = Url.get_total_urls(user.email)
+        total_clicks = Url.get_total_clicks(user.email)
+        
+        response = {
+            'first_name': user.first_name,
+            'total_urls': total_urls,
+            'total_clicks': total_clicks,
+
+        }
+
+        return response, HTTPStatus.OK
+
 
 @url_ns.route('/create')
 class CreateUrl(Resource):
+    @url_ns.doc(description='Create a shortened URL',
+                responses={
+                    HTTPStatus.CREATED: 'Created',
+                    HTTPStatus.BAD_REQUEST: 'Bad request'
+                    # HTTPStatus.UNAUTHORIZED: 'Invalid credentials'
+                })
+    @limiter.limit("10/minute")  # Adjust the rate limit as per your requirements
     @url_ns.expect(shorten_url_model)
     @url_ns.marshal_with(shortened_url_model)
     @jwt_required()
     def post(self):
+        """
+        Create a shortened URL
+        """
         print('Enpoint called!!!!!')
         email = get_jwt_identity()
 
@@ -77,28 +123,49 @@ class CreateUrl(Resource):
         if not validate_url(long_url):
             abort(HTTPStatus.BAD_REQUEST, message='Invalid URL')
 
-        if long_url:
-            short_url = generate_short_url()
+        # Check if the URL is already cached
+        cached_url = cache.get(long_url)
+        if cached_url:
+            return cached_url, HTTPStatus.CREATED
 
-            while Url.query.filter_by(short_url=short_url).first() is not None:
-                short_url = generate_short_url()
+        if long_url:
+            short_code = generate_short_code()
+
+            while Url.query.filter_by(short_code=short_code).first() is not None:
+                short_code = generate_short_code()
+
+            # Create the full short URL with the host URL
+            host_url = request.host_url.rstrip('/')
 
             url = Url(
                 long_url=long_url,
-                short_url=short_url,
+                short_code=short_code,
+                short_url=f"{host_url}/url/{short_code}",
                 # custom_domain=custom_domain,
                 user_id=email
             )
             url.save()
+
+            # Cache the URL
+            cache.set(long_url, url, timeout=300)  # Adjust the cache timeout as per your requirements
+
             return url, HTTPStatus.CREATED
-        # return render_template('create_short_url.html'), HTTPStatus.OK
 
 
-@url_ns.route('/<short_url>')
+@url_ns.route('/<string:short_code>')
 class RedirectUrl(Resource):
+    @url_ns.doc(description='Redirect to the original URL',
+                responses={
+                    HTTPStatus.OK: 'Success',
+                    HTTPStatus.NOT_FOUND: 'Invalid short URL'
+
+                })
     # @url_ns.marshal_with(shorten_url_model)
-    def get(self, short_url):
-        url = Url.query.filter_by(short_url=short_url).first()
+    def get(self, short_code):
+        """
+        Redirect to the original URL
+        """
+        url = Url.query.filter_by(short_code=short_code).first()
         if url:
             click = Click(
                 url_id=url.id, 
@@ -145,32 +212,83 @@ class RedirectUrl(Resource):
 #         return updated, HTTPStatus.CREATED    
 
 
-@url_ns.route('/<int:url_id>/custom')  # Assuming `url_id` is an integer
+# @url_ns.route('/<int:url_id>/custom')  # Assuming `url_id` is an integer
+# class CustomUrl(Resource):
+#     @url_ns.doc(description='Update the custom domain',
+#                 responses={
+#                     HTTPStatus.CREATED: 'Created',
+#                     # HTTPStatus.BAD_REQUEST: 'Invalid URL',
+#                     # HTTPStatus.UNAUTHORIZED: 'Invalid credentials',
+#                     HTTPStatus.NOT_FOUND: 'Url not found'
+#                 },
+#                 params={'url_id': 'Specify the URL ID'})
+#     @url_ns.expect(custom_domain_model)
+#     @url_ns.marshal_with(url_model)
+#     @jwt_required()
+#     def patch(self, url_id):
+#         current_user_id = get_jwt_identity()  # Renamed `id` to `current_user_id` to avoid shadowing
+
+#         url_to_update = Url.query.get(url_id)  # Fixed method name to `get` instead of `get_by_id`
+#         if url_to_update is None:
+#             abort(HTTPStatus.NOT_FOUND, message='Url not found')
+
+#         data = request.get_json()
+#         url_to_update.custom_domain = data.get('custom_domain')
+#         updated_custom_domain = url_to_update.custom_domain
+
+#         db.session.commit()
+
+#         return updated_custom_domain, HTTPStatus.CREATED
+
+
+
+
+@url_ns.route('/custom/<string:short_code>')
 class CustomUrl(Resource):
+    @url_ns.doc(description='Update the custom domain',
+                responses={
+                    HTTPStatus.CREATED: 'Created',
+                    HTTPStatus.NOT_FOUND: 'URL not found'
+                },
+                params={'short_code': 'Specify the short code'})
     @url_ns.expect(custom_domain_model)
-    @url_ns.marshal_with(custom_domain_model)
+    @url_ns.marshal_with(url_model)
     @jwt_required()
-    def patch(self, url_id):
+    def patch(self, short_code):
         current_user_id = get_jwt_identity()  # Renamed `id` to `current_user_id` to avoid shadowing
 
-        url_to_update = Url.query.get(url_id)  # Fixed method name to `get` instead of `get_by_id`
+        email = get_jwt_identity()
+
+
+        url_to_update = Url.query.filter_by(short_code=short_code, user_id=email).first()
         if url_to_update is None:
-            abort(HTTPStatus.NOT_FOUND, message='Url not found')
+            abort(HTTPStatus.NOT_FOUND, message='URL not found')
 
         data = request.get_json()
-        url_to_update.custom_domain = data.get('custom_domain')
-        updated_custom_domain = url_to_update.custom_domain
 
+        url_to_update.custom_domain = data.get('custom_domain')
+        url_to_update.custom_url = f'https://{url_to_update.custom_domain}/url/{url_to_update.short_code}'
         db.session.commit()
 
-        return updated_custom_domain, HTTPStatus.CREATED
+        return url_to_update, HTTPStatus.CREATED
+
+
+
 
 
 @url_ns.route('/urls')
 class AllUrls(Resource):
+    @url_ns.doc(description='Get all URLs',
+                responses={
+                    HTTPStatus.OK: 'Success',
+                    HTTPStatus.NOT_FOUND: 'User not found'
+                })
     @url_ns.marshal_list_with(url_model)
     @jwt_required()
     def get(self):
+        """
+        Get all URLs
+        """
         print("Endpoint initiated!!!!!")
         email = get_jwt_identity()
         user = User.query.filter_by(email=email).first()
@@ -204,12 +322,20 @@ class AllUrls(Resource):
 
 
 
-@url_ns.route('/analytics/<short_url>')
+@url_ns.route('/analytics/<string:short_code>')
 class UrlAnalytics(Resource):
+    @url_ns.doc(params={'short_code': 'Short code of the URL'},
+                responses={
+                    HTTPStatus.OK: 'Success',
+                    HTTPStatus.NOT_FOUND: 'Invalid short URL'},
+                description='Get analytics for a URL')
     # print("Endpoint started")
-    def get(self, short_url):
+    def get(self, short_code):
+        """
+        Get Analytics for a URL
+        """
         print("Endpoint initiated!!!!!")
-        url = Url.query.filter_by(short_url=short_url).first()
+        url = Url.query.filter_by(short_code=short_code).first()
         if url:
             clicks = Click.query.filter_by(url_id=url.id).all()
             click_data = []
@@ -222,7 +348,7 @@ class UrlAnalytics(Resource):
                     'user_agent': click.user_agent
                 })
             response = {
-                'short_url': short_url,
+                'short_code': short_code,
                 'clicks': click_data
             }
             return response, HTTPStatus.OK
@@ -236,14 +362,25 @@ class UrlAnalytics(Resource):
 
         
 
-@url_ns.route('/qr-code/<short_url>')
+@url_ns.route('/qr-code/<string:short_code>')
 class QrCode(Resource):
+    @url_ns.doc(params={'short_code': 'Short code of the URL'},
+                    responses={
+                        HTTPStatus.OK: 'Success',
+                        HTTPStatus.NOT_FOUND: 'Invalid short URL'
+                    },
+                    description='Get QR code for a URL')
+    
+
     # @cache.cached(timeout=300)
-    def get(self, short_url):
+    def get(self, short_code):
+        """
+        Get QR code for a URL
+        """
         print("Endpoint initiated!!!!!")
-        url = Url.query.filter_by(short_url=short_url).first()
+        url = Url.query.filter_by(short_code=short_code).first()
         if url:
-            qr_code_image = generate_qr_code(url.short_url)
+            qr_code_image = generate_qr_code(url.short_code)
 
             qr_code_file = io.BytesIO()
             qr_code_image.save(qr_code_file, format='PNG')
@@ -281,7 +418,7 @@ class QrCode(Resource):
         
 
 
-        #     qr_code_image_url = generate_qr_code(url.short_url)
+        #     qr_code_image_url = generate_qr_code(url.short_code)
 
         #     return {
         #         "qr_code_image_url": qr_code_image_url
@@ -294,16 +431,16 @@ class QrCode(Resource):
 
 
 
-def generate_qr_code(short_url):
+def generate_qr_code(short_code):
     # timestamp = int(time.time()) // 300  # Get the current timestamp and divide by 300 (5 minutes)
-    # data = f"{short_url}-{timestamp}"  # Combine short_url and timestamp
+    # data = f"{short_code}-{timestamp}"  # Combine short_code and timestamp
     qr = qrcode.QRCode(
         version=4,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
         box_size=10,
         border=3
     )
-    qr.add_data(short_url)
+    qr.add_data(short_code)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
     img = img.resize((400, 400), Image.ANTIALIAS)
@@ -311,7 +448,7 @@ def generate_qr_code(short_url):
 
 
     # qr_code_data = {
-    #     "data": short_url,
+    #     "data": short_code,
     #     "size": 400,
     #     "color": "000000",
     #     "bgcolor": "FFFFFF",
