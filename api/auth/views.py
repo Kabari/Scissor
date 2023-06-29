@@ -14,7 +14,7 @@ auth_ns = Namespace('auth', description='Authentication related operations')
 signup_model = auth_ns.model(
     'Signup', {
         'id': fields.Integer(),
-        'uuid': fields.String(max_length=36, description='User unique identifier'),
+        'uuid': fields.String(max_length=16, description='User unique identifier'),
         'first_name': fields.String(required=True, max_length=50, description='User first name'),
         'last_name': fields.String(required=True, max_length=50, description='User last name'),
         'email': fields.String(required=True, max_length=50, description='User email address'),
