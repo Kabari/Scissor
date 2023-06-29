@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const currentUrl = window.location.href;
   const urlParts = currentUrl.split("/");
-  const shortUrl = urlParts[urlParts.length - 1];
+  const shortCode = urlParts[urlParts.length - 1];
 
   // Make a request to the analytics endpoint
   axios
-    .get(`/url/analytics/${shortUrl}`, {
+    .get(`/url/analytics/${shortCode}`, {
       headers: {
         Authorization: `Bearer ${access_token}`, // Replace with your JWT access token
       },
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Use the analyticsData to update your HTML elements accordingly
 
-      const shortUrlSpan = document.getElementById("short_url");
-      shortUrlSpan.textContent = shortUrl;
+      const shortCodeSpan = document.getElementById("short_code");
+      shortCodeSpan.textContent = shortCode;
 
       // Get the table body element
       const tableBody = document.getElementById("clicks-table-body");
@@ -64,27 +64,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// function isTokenExpired(token) {
-//   const decodedToken = jwt_decode(token);
-//   const currentTime = Date.now() / 1000;
-//   return decodedToken.exp < currentTime;
-// }
-
-// // Get the access token from localStorage
-// const accessToken = localStorage.getItem('access_token');
-
-// // Check if the access token is expired
-// if (isTokenExpired(accessToken)) {
-//   // Redirect to the login page
-//   window.location.href = '/login.html';
-// }
-
-
-// // Get the refresh token from localStorage
-// const refreshToken = localStorage.getItem('refresh_token');
-
-// // Check if the refresh token is expired
-// if (isTokenExpired(refreshToken)) {
-//   // Redirect to the login page
-//   window.location.href = '/login.html';
-// }
