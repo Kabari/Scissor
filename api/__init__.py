@@ -8,11 +8,11 @@ from flask_cors import CORS
 from flask_mail import Mail
 from .auth.views import auth_ns
 from .shorten.views import url_ns
-# from .controllers.controllers import api as ns
 from .models.user import User
 from .models.url import Url
 from .models.click import Click
-from flask_caching import Cache
+from .extensions import cache, limiter
+
 
 
 def create_app(config=config_dict['dev']):
@@ -22,8 +22,8 @@ def create_app(config=config_dict['dev']):
 
     db.init_app(app)
 
-    cache = Cache(app)
-    # Cache.init_app(app)
+    cache.init_app(app)
+    limiter.init_app(app)
 
     CORS(app)
 
@@ -31,7 +31,7 @@ def create_app(config=config_dict['dev']):
 
     migrate = Migrate(app, db)
 
-    mail = Mail(app)
+    # mail = Mail(app)
 
     
     @app.route('/')
@@ -51,7 +51,7 @@ def create_app(config=config_dict['dev']):
     }
 
     api = Api(app, 
-        version='1.0', 
+        version='3.0', 
         title='Scissor API', 
         description='A url shortener Service',
         authorizations=authorizations,
