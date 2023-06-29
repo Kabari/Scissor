@@ -5,7 +5,7 @@ from .utils import db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-from flask_mail import Mail
+# from flask_mail import Mail
 from .auth.views import auth_ns
 from .shorten.views import url_ns
 from .models.user import User
@@ -15,7 +15,7 @@ from .extensions import cache, limiter
 
 
 
-def create_app(config=config_dict['dev']):
+def create_app(config=config_dict['prod']):
     app = Flask(__name__, static_folder='static', template_folder='templates')
 
     app.config.from_object(config)
