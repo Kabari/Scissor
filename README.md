@@ -164,6 +164,213 @@ The application can be configured by modifying the `config.py` file. Make sure t
     }
     ```
 
+## Dashboard
+
+**Description:** Get the dashboard details
+
+**Endpoint:*** `/url/dashboard`
+
+**Method:** GET
+
+**Security:** JWT token (Include the access token in the request header as `Authorization: Bearer [access_token]`)
+
+**Responses:**
+
+- **HTTP Status Code: 200**
+  - **Description:** Success
+  - **Body:**
+      ```
+      {
+        "first_name": "string",
+        "total_urls": "integer",
+        "total_clicks": "integer"
+      }
+      ```
+- **HTTP Status Code:** 404
+  - **Description:** User not found
+
+## Create URL
+
+**Description:** Create a shortened URL
+
+**Endpoint:** `/url/create`
+
+**Method:** POST
+
+**Security:** JWT token (Include the access token in the request header as `Authorization: Bearer [access_token]`)
+
+**Rate Limit:** 10 requests per minute
+
+**Request Body:**
+```
+{
+  "long_url": "string"
+}
+```
+**Responses:**
+
+- **HTTP Status Code:** 201
+
+- **Description:** Created
+- **Body:**
+```
+{
+  "id": "integer",
+  "long_url": "string",
+  "short_code": "string",
+  "short_url": "string",
+  "user_id": "string"
+}
+```
+- **HTTP Status Code:** 400
+- **Description:** Bad request (Invalid URL)
+
+## Redirect URL
+
+**Description:** Redirect to the original URL
+
+**Endpoint:** `/url/<short_code>`
+
+**Method:** GET
+
+**Responses:**
+
+- **HTTP Status Code:** 302
+  - **Description:** Success (Redirects to the original URL)
+
+- **HTTP Status Code:** 404
+  - **Description:** Invalid short URL
+
+
+## Update Custom Domain
+**Description:** Update the custom domain
+
+**Endpoint:** `/url/custom/<short_code>`
+
+**Method:** PATCH
+
+**Security:** JWT token (Include the access token in the request header as `Authorization: Bearer [access_token]`)
+
+**Params:**
+  **short_code:** Specify the short code
+  
+**Request Body:**
+    ```
+    {
+      "custom_domain": "string"
+    }
+    ```
+**Responses:**
+
+- **HTTP Status Code:** 201
+
+  - **Description:** Created
+  - **Body:**
+    ```
+      {
+        "id": "integer",
+        "long_url": "string",
+        "short_code": "string",
+        "short_url": "string",
+        "custom_domain": "string",
+        "user_id": "string"
+      }
+  ```
+
+- **HTTP Status Code:** 404
+  - **Description:** URL not found
+ 
+    
+## Get All URLs
+**Description:** Get all URLs
+
+**Endpoint:** `/url/urls`
+
+**Method:** GET
+
+**Security:** JWT token (Include the access token in the request header as `Authorization: Bearer [access_token]`)
+
+**Responses:**
+
+- **HTTP Status Code:** 200
+
+  - **Description:** Success
+  - **Body:** Array of URL objects
+    ```
+      [
+        {
+          "id": "integer",
+          "long_url": "string",
+          "short_code": "string",
+          "short_url": "string",
+          "user_id": "string"
+        },
+        ...
+      ]
+    ```
+- **HTTP Status Code:** 404
+
+  - **Description:** User not found
+
+
+## URL Analytics
+**Description:** Get analytics for a URL
+
+**Endpoint:** `/url/analytics/<short_code>`
+
+**Method:** GET
+
+**Params:**
+
+**short_code:** Short code of the URL
+**Responses:**
+
+- **HTTP Status Code:** 200
+
+  - **Description:** Success
+  - **Body:**
+    ```
+      {
+        "short_code": "string",
+        "clicks": [
+          {
+            "id": "integer",
+            "timestamp": "string",
+            "ip_address": "string",
+            "referrer": "string",
+            "user_agent": "string"
+          },
+          ...
+        ]
+      }
+    ```
+    
+- **HTTP Status Code:** 404
+
+  - **Description:** Invalid short URL
+
+  
+## Get QR Code
+**Description:** Get QR code for a URL
+
+**Endpoint:** `/url/qr-code/<short_code>`
+
+**Method:** GET
+
+**Params:**
+
+**short_code:** Short code of the URL
+**Responses:**
+
+- **HTTP Status Code:** 200
+
+  - **Description:** Success (Returns the QR code image)
+  - **Body:** QR code image file
+
+- **HTTP Status Code:** 404
+
+  - **Description:** Invalid short URL
+
 
 
 ## Contributing
