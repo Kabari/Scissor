@@ -57,7 +57,7 @@ The application can be configured by modifying the `config.py` file. Make sure t
 **Method:** POST
 
 **Request Body:**
-'''
+```
 {
 "first_name": "string",
 "last_name": "string",
@@ -65,7 +65,7 @@ The application can be configured by modifying the `config.py` file. Make sure t
 "password": "string",
 "confirm_password": "string"
 }
-'''
+```
 **Responses:**
 
 - **HTTP Status Code: 201**
