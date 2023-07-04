@@ -29,16 +29,29 @@ The Shorten URL Service is a web application that allows users to shorten long U
 
 1. Clone the repository: `git clone https://github.com/Kabari/Scissor.git`
 2. Change to the project directory: `cd Scissor`
-3. Install the dependencies: `pip install -r requirements.txt`
-4. Set up the database: `python manage.py create_db`
-5. Start the application: `python manage.py runserver`
+3. Create a virtual environment: `python -m venv venv`
+4. Activate the virtual environment: `source venv/Scripts/activate`
+5. Install the dependencies: `pip install -r requirements.txt`
+6. Set up the database:
+   In your terminal type `flask shell` then type `db.create_all()`
+8. Start the application: `flask run`
 
 ## Configuration
+## The application can be configured by modifying the `.env` file.
 
-The application can be configured by modifying the `config.py` file. Make sure to set the appropriate values for:
+- Create a `.env` file in your root directory of the project
+- Add the following configurations to the file
+  ```
+    SECRET_KEY = 'your secret key'
+    JWT_SECRET_KEY = 'your JWT secret key'
+    DEBUG = TRUE
+    FLASK_APP=runserver
+    CACHE_TYPE = SimpleCache
+    FLASK_ENV=development
+  ```
+ Make sure to set the appropriate values in the `config.py` for:
 
 - Database connection details
-- JWT secret key
 
 ## Usage
 
@@ -57,15 +70,15 @@ The application can be configured by modifying the `config.py` file. Make sure t
 **Method:** POST
 
 **Request Body:**
-```
-{
-"first_name": "string",
-"last_name": "string",
-"email": "string",
-"password": "string",
-"confirm_password": "string"
-}
-```
+  ```
+    {
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string",
+    "password": "string",
+    "confirm_password": "string"
+    }
+  ```
 **Responses:**
 
 - **HTTP Status Code: 201**
@@ -385,6 +398,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 - [Flask](https://flask.palletsprojects.com/) - Python web framework
 - [SQLAlchemy](https://www.sqlalchemy.org/) - Python SQL toolkit
-- [Bootstrap](https://getbootstrap.com/) - CSS framework
+- [Flask-Restx]([https://www.sqlalchemy.org/](https://flask-restx.readthedocs.io/en/latest/)) - Flask RestAPI
 
-Feel free to customize the documentation according to your project's specific details and requirements.
+
+
