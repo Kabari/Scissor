@@ -28,7 +28,7 @@ class Url(db.Model):
 
     def save(self):
         if not self.uuid:
-            self.uuid = str(uuid4())
+            self.uuid = uuid4().hex[:16]
         db.session.add(self)
         db.session.commit()
 
