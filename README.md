@@ -398,7 +398,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 - [Flask](https://flask.palletsprojects.com/) - Python web framework
 - [SQLAlchemy](https://www.sqlalchemy.org/) - Python SQL toolkit
-- [Flask-Restx]([https://www.sqlalchemy.org/](https://flask-restx.readthedocs.io/en/latest/)) - Flask RestAPI
+- [Flask-Restx](https://flask-restx.readthedocs.io/en/latest/) - Flask RestAPI
 
 
 
