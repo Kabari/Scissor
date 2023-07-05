@@ -35,7 +35,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    DEBUG = os.getenv('DEBUG', False, cast=bool)
+    DEBUG = os.getenv('DEBUG', False)
 
     
     SQLALCHEMY_DATABASE_URI = uri
