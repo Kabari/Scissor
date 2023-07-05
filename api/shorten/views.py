@@ -179,68 +179,6 @@ class RedirectUrl(Resource):
         else:
             abort(HTTPStatus.NOT_FOUND, message='Invalid short URL')
             
-        #     # response = {redirect(url.long_url)}
-        #     return redirect(url.long_url), HTTPStatus.OK
-        # else:
-        #     # response = {
-        #     #     'message': 'Invalid short url'
-        #     # }
-        #     return {
-        #         'message': 'Invalid short url'
-        #     }, HTTPStatus.NOT_FOUND
-
-
-
-# @url_ns.route('/<short_url>/custom')
-# class CustomUrl(Resource):
-#     @url_ns.expect(custom_domain_model)
-#     @url_ns.marshal_with(custom_domain_model)
-#     @jwt_required()
-#     def patch(self, url_id):
-#         id = get_jwt_identity()
-
-#         url_to_update = Url.query.get_by_id(url_id)
-#         if url_to_update is None:
-#             abort(HTTPStatus.NOT_FOUND, message='Url not found')
-
-#         data = request.get_json()
-#         url_to_update.custom_domain = data.get('custom_domain')
-#         updated = url_to_update.custom_domain
-
-#         db.session.commit()
-
-#         return updated, HTTPStatus.CREATED    
-
-
-# @url_ns.route('/<int:url_id>/custom')  # Assuming `url_id` is an integer
-# class CustomUrl(Resource):
-#     @url_ns.doc(description='Update the custom domain',
-#                 responses={
-#                     HTTPStatus.CREATED: 'Created',
-#                     # HTTPStatus.BAD_REQUEST: 'Invalid URL',
-#                     # HTTPStatus.UNAUTHORIZED: 'Invalid credentials',
-#                     HTTPStatus.NOT_FOUND: 'Url not found'
-#                 },
-#                 params={'url_id': 'Specify the URL ID'})
-#     @url_ns.expect(custom_domain_model)
-#     @url_ns.marshal_with(url_model)
-#     @jwt_required()
-#     def patch(self, url_id):
-#         current_user_id = get_jwt_identity()  # Renamed `id` to `current_user_id` to avoid shadowing
-
-#         url_to_update = Url.query.get(url_id)  # Fixed method name to `get` instead of `get_by_id`
-#         if url_to_update is None:
-#             abort(HTTPStatus.NOT_FOUND, message='Url not found')
-
-#         data = request.get_json()
-#         url_to_update.custom_domain = data.get('custom_domain')
-#         updated_custom_domain = url_to_update.custom_domain
-
-#         db.session.commit()
-
-#         return updated_custom_domain, HTTPStatus.CREATED
-
-
 
 
 @url_ns.route('/custom/<string:short_code>')
