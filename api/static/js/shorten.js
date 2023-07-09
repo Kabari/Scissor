@@ -88,3 +88,32 @@ function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString(undefined, options);
 }
+
+//!!!! copy link to clipboard!!
+function copyToClipboard() {
+  // Get the shortened URL element
+  var shortenedUrlElement = document.getElementById("shortened-url");
+
+  // Create a temporary textarea element
+  var textarea = document.createElement("textarea");
+  textarea.value = shortenedUrlElement.textContent;
+  document.body.appendChild(textarea);
+
+  // Select the text within the textarea
+  textarea.select();
+
+  try {
+    // Execute the copy command
+    var successful = document.execCommand("copy");
+    var message = successful ? "URL copied!" : "Copy failed!";
+    alert(message);
+  } catch (err) {
+    console.error("Error copying URL: ", err);
+  }
+
+  // Clean up and remove the temporary textarea element
+  document.body.removeChild(textarea);
+}
+
+var copyButton = document.getElementById("copy-btn");
+copyButton.addEventListener("click", copyToClipboard);
