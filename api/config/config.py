@@ -30,12 +30,15 @@ class TestingConfig(Config):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    CACHE_TYPE = 'SimpleCache'
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = os.getenv('DEBUG', False)
+
+    
 
     
     SQLALCHEMY_DATABASE_URI = uri
