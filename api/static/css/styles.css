@@ -534,6 +534,10 @@ td:nth-child(5) {
 
 
 /*! link management */
+.link-main {
+    height: 100vh;
+}
+
 .link-management-container {
     padding: 20px;
 }
@@ -553,7 +557,7 @@ td:nth-child(5) {
 }
 
 .link-item {
-    width: 45%;
+    width: auto;
     margin: 10px;
     padding: 20px;
     border: 1px solid #ccc;
@@ -636,6 +640,7 @@ td:nth-child(5) {
 
 /*! shorten page */
 .tagline {
+    margin-top: 20px;
     text-align: center;
 }
 
@@ -644,9 +649,13 @@ h1 {
     font-weight: bold;
 }
 
+.shorten-main {
+    height: 100vh;
+}
+
 .shorten-section {
     margin: auto;
-    width: 900px;
+    width: auto;
     margin-top: 40px;
     padding: 20px;
     background-color: #fff;
