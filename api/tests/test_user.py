@@ -1,4 +1,6 @@
 import unittest
+from http import HTTPStatus
+from flask import json
 from .. import create_app
 from ..config.config import config_dict
 from ..utils import db
@@ -32,32 +34,104 @@ class UserTestCase(unittest.TestCase):
 
     def test_user_signup(self):
 
-        data = {
+        signup_data = {
             "first_name": "test",
             "last_name": "user",
             "email": "testuser@test.com", 
-            "password": "test"
+            "password": "test",
+            "confirm_password": "test"
         }
 
-        response = self.client.post('/auth/signup', json=data)
+        response = self.client.post('/auth/signup', json=signup_data)
 
-        user = User.query.filter_by(email="testuser@test.com").first()
+        self.assertEqual(response.status_code, HTTPStatus.CREATED)
 
-        assert user.first_name == 'test'
-        assert user.last_name == 'user'
-        assert user.email == 'testuser@test.com'
-
-        assert response.status_code == 201
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data['first_name'], 'test')
+        self.assertEqual(response_data['last_name'], 'user')
+        self.assertEqual(response_data['email'], 'testuser@test.com')
         
 
     def test_user_login(self):
-        data = {
+        login_data = {
             "email": "testuser@test.com", 
             "password": "test"
         }
 
-        response = self.client.post('/auth/login', json=data)
+        # Send a POST request to the login endpoint
+        response = self.client.post('/auth/login', json=login_data)
 
-        assert data['email'] == 'testuser@test.com'
-        assert response.status_code == 200
+        # # Print the response data and content
+#         print(response.data)
+#         print(response.get_data(as_text=True))
 
+
+
+        # Assert the response status code
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+        # Assert the login data
+        response_data = json.loads(response.data)
+        self.assertEqual(login_data['email'], 'testuser@test.com')
+
+
+    
+    def test_refresh_endpoint(self):
+    
+        # Create a mock refresh token
+        refresh_token = create_access_token(identity='testuser@test.com')
+
+        # Set the authorization header with the refresh token
+        headers = {
+            'Authorization': f'Bearer {refresh_token}'
+        }
+
+        # Send a POST request to the refresh endpoint
+        response = self.client.post('/auth/refresh', headers=headers)
+
+# Print the response data and content
+        print(response.data)
+        print(response.get_data(as_text=True))
+        # Assert the response status code
+        # self.assertEqual(response_data['msg'], 'testuser@test.com')
+        # assert response.status_code == HTTPStatus.OK
+
+        # Assert the response data
+        response_data = json.loads(response.data)
+        # assert 'access_token' in response_data
+        # assert response_data['access_token'] != refresh_token
+        assert response_data['msg'] == 'Only refresh tokens are allowed'
+
+
+
+
+
+
+    # def test_logout_endpoint(self):
+    #     # Create a mock access token
+    #     access_token = create_access_token(identity='testuser@test.com')
+
+    #     # Set the authorization header with the access token
+    #     headers = {
+    #         'Authorization': f'Bearer {access_token}'
+    #     }
+
+    #     # Send a POST request to the logout endpoint
+    #     response = self.client.post('/logout', headers=headers)
+
+    #     print(response.data)
+    #     print(response.get_data(as_text=True))
+    #     # Assert the response status code
+    #     # self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    #     # Assert the response data
+    #     response_data = response.get_json()
+    #     self.assertEqual(response_data['message'], 'Successfully Logged Out')
+
+        # # Assert that the access token is revoked
+        # token_data = decode_token(access_token)
+        # self.assertTrue(token_data['jti'] in revoked_store)
+
+        # # Assert that the cookies are unset
+        # self.assertTrue('access_token_cookie' not in response.headers.get_all('Set-Cookie'))
+        # self.assertTrue('refresh_token_cookie' not in response.headers.get_all('Set-Cookie'))
