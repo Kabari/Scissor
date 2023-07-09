@@ -133,18 +133,18 @@ axios
       linkActions.appendChild(addAliasButton);
 
       // Create the other buttons (Edit, Add Alias, Track Performance, Categorize)
-      const buttons = [
-        "edit-link",
-        // "add-alias",
-        // "track-performance",
-        // "categorize-link",
-      ];
-      buttons.forEach((buttonClass) => {
-        const button = document.createElement("button");
-        button.classList.add(buttonClass);
-        button.textContent = buttonClass.replace("-", " ");
-        linkActions.appendChild(button);
-      });
+      // const buttons = [
+      //   "edit-link",
+      //   // "add-alias",
+      //   // "track-performance",
+      //   // "categorize-link",
+      // ];
+      // buttons.forEach((buttonClass) => {
+      //   const button = document.createElement("button");
+      //   button.classList.add(buttonClass);
+      //   button.textContent = buttonClass.replace("-", " ");
+      //   linkActions.appendChild(button);
+      // });
 
       // Append the link actions to the link item
       linkItem.appendChild(linkActions);
