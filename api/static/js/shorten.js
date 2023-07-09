@@ -1,3 +1,35 @@
+// !!!!!!! Function to handle the "Logout" button click
+function handleLogoutButtonClick() {
+  const accessToken = localStorage.getItem("access_token");
+
+  // Make a POST request to the '/logout' endpoint
+  console.log("axios is working well");
+  axios
+    .post(
+      "/auth/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
+        },
+      }
+    )
+    .then((response) => {
+      // Clear the access token from local storage
+      localStorage.removeItem("access_token");
+
+      // Redirect the user to the login page or perform any other action
+      window.location.href = "/login"; // Replace "/login" with the appropriate login page URL
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+// Attach the click event listener to the "Logout" button
+const logoutBtn = document.querySelector(".logout-btn");
+logoutBtn.addEventListener("click", handleLogoutButtonClick);
+
 // Add this code to your "shorten.js" file or within a <script> tag in your HTML
 const access_token = localStorage.getItem("access_token");
 
@@ -56,5 +88,3 @@ function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString(undefined, options);
 }
-
-
