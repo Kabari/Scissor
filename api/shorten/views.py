@@ -156,7 +156,7 @@ class CreateUrl(Resource):
 class RedirectUrl(Resource):
     @url_ns.doc(description='Redirect to the original URL',
                 responses={
-                    HTTPStatus.OK: 'Success',
+                    HTTPStatus.FOUND: 'Success',
                     HTTPStatus.NOT_FOUND: 'Invalid short URL'
 
                 })
