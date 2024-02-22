@@ -3,7 +3,7 @@ aniso8601
 async-timeout
 attrs
 blinker
-cachelib
+cachelib==0.10.0
 certifi
 charset-normalizer
 click
