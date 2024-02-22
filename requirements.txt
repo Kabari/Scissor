@@ -3,7 +3,7 @@ aniso8601
 async-timeout
 attrs
 blinker
-cachelib==0.10.0
+cachelib
 certifi
 charset-normalizer
 click
@@ -12,7 +12,7 @@ decorator
 Deprecated
 exceptiongroup
 Flask
-Flask-Caching
+Flask-Caching==2.0.0
 Flask-Cors
 Flask-JWT-Extended
 Flask-Limiter
